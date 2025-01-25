@@ -89,30 +89,42 @@
                 <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
 
                     <div class="flex justify-between">
-                        <div class="mt-4 flex justify-between mb-5">
-                            <input type="date" id="otDate" name="otDate" class="mr-2 p-2 rounded-lg">
-                        </div>
-
-                        <div class="mt-4 mb-5">
-                            <input type="text" id="totalTime" name="totalTime"
-                                class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+                        <div class="mt-4 flex justify-between mb-5 w-full">
+                            <div class="w-1/2 mr-2">
+                                <label for="otDate" class="block text-sm font-medium text-gray-700 mb-1">วันที่ทำโอที</label>
+                                <input type="date" id="otDate" name="otDate" class="w-full p-2 rounded-lg border">
+                            </div>
+                            <div class="w-1/2 ml-2">
+                                <label for="totalTime" class="block text-sm font-medium text-gray-700 mb-1">เวลาทำโอที</label>
+                                <input type="text" id="totalTime" name="totalTime"
+                                    class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-4 flex justify-between mb-5">
-                        <input type="time" id="startTime" name="startTime" class="w-1/2 mr-2 p-2 rounded-lg" value="00:00">
-                        <input type="time" id="endTime" name="endTime" class="w-1/2 ml-2 p-2 rounded-lg" value="00:00">
+                        <div class="w-1/2 mr-2">
+                            <label for="startTime" class="block text-sm font-medium text-gray-700 mb-1">เวลาเริ่มต้น</label>
+                            <input type="time" id="startTime" name="startTime" class="w-full p-2 rounded-lg border" value="00:00">
+                        </div>
+                        <div class="w-1/2 ml-2">
+                            <label for="endTime" class="block text-sm font-medium text-gray-700 mb-1">เวลาสิ้นสุด</label>
+                            <input type="time" id="endTime" name="endTime" class="w-full p-2 rounded-lg border" value="00:00">
+                        </div>
                     </div>
 
                     <div class="mt-6 mb-5">
+                        <label for="otTitle" class="block text-sm font-medium text-gray-700 mb-1">หัวข้อเรื่อง</label>
                         <input type="text" id="otTitle" name="otTitle" placeholder="หัวข้อเรื่อง"
                             class="w-full p-2 border rounded-lg">
                     </div>
                     <div class="mt-4 mb-5">
+                        <label for="otDetail" class="block text-sm font-medium text-gray-700 mb-1">รายละเอียด</label>
                         <textarea id="otDetail" name="otDetail" placeholder="รายละเอียด"
                             class="w-full p-2 border rounded-lg"></textarea>
                     </div>
                     <div class="text-center bg-slate-100 rounded-lg my-5 p-4">
-                        <label for="file" class="cursor-pointer justify-between items-center"> อัพโหลดเอกสาร
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">อัพโหลดเอกสาร</label>
+                        <label for="file" class="cursor-pointer flex justify-center items-center">
                             <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                                 class="hidden">
                             <div id="fileNameDisplay"
