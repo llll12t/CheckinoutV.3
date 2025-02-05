@@ -310,7 +310,9 @@
         const switchCameraBtn = document.getElementById("switch-camera-btn");
         const previewImage = document.getElementById("preview");
         let stream;
-        let currentFacingMode = "environment"; // เริ่มต้นที่กล้องหลัง
+        let currentFacingMode = "user"; // เริ่มต้นที่กล้องหลัง
+        // let currentFacingMode = "environment"; // เริ่มต้นที่กล้องหลัง
+
 
         // ฟังก์ชันเปิดกล้อง
         function startCamera() {
