@@ -29,7 +29,7 @@
       <input type="hidden" id="displayName" name="displayName">
 
       <!-- แสดงข้อมูลหลัก -->
-      <div id="main-info" class="mb-6 text-sm flex flex-col space-y-2">
+      <div id="main-info" class="bg-slate-200 rounded shadow-sm p-6 mb-6 text-sm flex flex-col space-y-2">
         <div class="flex items-center">
           <strong>ชื่อ:</strong>
           <span id="name-info" class="font-medium ml-1"></span>
@@ -45,10 +45,10 @@
         <table class="min-w-full divide-y divide-slate-200 rounded shadow-sm">
           <!-- เพิ่ม rounded-t-lg ให้กับ thead -->
           <thead class="rounded-t-lg">
-            <tr class="bg-slate-800 text-slate-100 text-center text-xs">
-              <th class="py-2 px-4">สถานะ</th>
-              <th class="py-2 px-4">หมายเหตุ</th>
-              <th class="py-2 px-4">วันที่เวลา</th>
+            <tr class="text-slate-100 text-center text-xs">
+              <th class="py-2 px-4 bg-slate-800 rounded-tl-lg">สถานะ</th>
+              <th class="py-2 px-4 bg-slate-800 ">หมายเหตุ</th>
+              <th class="py-2 px-4 bg-slate-800 rounded-tr-lg">วันที่เวลา</th>
             </tr>
           </thead>
           <tbody id="data-table" class="text-slate-600 text-xs">
