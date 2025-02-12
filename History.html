@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="th">
 
 <head>
@@ -14,7 +14,7 @@
   <!-- นำเข้า Heroicons สำหรับไอคอน -->
   <script src="https://unpkg.com/heroicons@2.0.13/dist/heroicons.min.js"></script>
   <style>
-    /* เพิ่ม CSS สำหรับการแสดงสถานะการโหลด */
+    /* CSS สำหรับแสดงสถานะการโหลด */
     #loading {
       display: none;
       text-align: center;
@@ -28,7 +28,7 @@
       <input type="hidden" id="userId" name="userId">
       <input type="hidden" id="displayName" name="displayName">
 
-      <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
+      <!-- แสดงข้อมูลหลัก -->
       <div id="main-info" class="mb-6 text-sm flex flex-col space-y-2">
         <div class="flex items-center">
           <strong>ชื่อ:</strong>
@@ -40,19 +40,19 @@
         </div>
       </div>
 
-      <!-- ห่อหุ้มตารางด้วย div ที่สามารถเลื่อนแนวนอนได้ -->
+      <!-- ตารางแสดงข้อมูล -->
       <div class="overflow-x-auto">
-        <!-- ตารางแสดงข้อมูลการบันทึก -->
         <table class="min-w-full divide-y divide-slate-200 rounded shadow-sm">
-          <thead>
-            <tr class="bg-slate-800 text-slate-100 text-left text-xs">
+          <!-- เพิ่ม rounded-t-lg ให้กับ thead -->
+          <thead class="rounded-t-lg">
+            <tr class="bg-slate-800 text-slate-100 text-center text-xs">
               <th class="py-2 px-4">สถานะ</th>
               <th class="py-2 px-4">หมายเหตุ</th>
               <th class="py-2 px-4">วันที่เวลา</th>
             </tr>
           </thead>
           <tbody id="data-table" class="text-slate-600 text-xs">
-            <!-- ข้อมูลการบันทึกจะถูกแสดงในส่วนนี้ -->
+            <!-- ข้อมูลการบันทึกจะแสดงที่นี่ -->
           </tbody>
         </table>
       </div>
@@ -67,35 +67,34 @@
   <script>
     // URL ของ Web App ที่คุณ Deploy ไว้
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
-
     const LIFF_ID = '2006740306-qLWyP3w6'; // LIFF ID
 
     // จำนวนรายการที่จะแสดงต่อหน้า
     const itemsPerPage = 10;
     let currentPage = 1;
 
-    // เริ่มต้นการทำงานเมื่อโหลดหน้าเสร็จสิ้น
+    // เริ่มต้นเมื่อโหลดหน้าเสร็จ
     window.onload = function () {
       initializeLiff();
     };
 
     // ฟังก์ชันเริ่มต้น LIFF
     async function initializeLiff() {
-      await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ LIFF ID ที่กำหนด
+      await liff.init({ liffId: `${LIFF_ID}` });
       if (liff.isLoggedIn()) {
-        getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
+        getUserProfile();
       } else {
-        liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้พาไปหน้าเข้าสู่ระบบ
+        liff.login();
       }
     }
 
-    // ฟังก์ชันดึงข้อมูลโปรไฟล์ของผู้ใช้
+    // ฟังก์ชันดึงข้อมูลโปรไฟล์ผู้ใช้
     async function getUserProfile() {
       try {
-        const profile = await liff.getProfile(); // ดึงข้อมูลโปรไฟล์จาก LIFF
+        const profile = await liff.getProfile();
         document.getElementById('userId').value = profile.userId;
         document.getElementById('displayName').value = profile.displayName;
-        fetchData(profile.userId); // ดึงข้อมูลการบันทึกโดยใช้ userId
+        fetchData(profile.userId);
       } catch (error) {
         console.error('Error getting profile data:', error);
       }
@@ -103,24 +102,24 @@
 
     // ฟังก์ชันดึงข้อมูลจาก Web App
     async function fetchData(userId) {
-      document.getElementById('loading').style.display = 'block'; // แสดงสถานะการโหลด
+      document.getElementById('loading').style.display = 'block';
       try {
         const response = await fetch(`${WEB_APP_URL}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
+        const data = await response.json();
         console.log('Fetched data:', data);
         const filteredData = data.filter(row => row[11] === userId); // กรองข้อมูลตาม userId (คอลัมน์ที่ 11)
 
-        // แสดงชื่อและรหัสพนักงานจากแถวสุดท้ายของข้อมูลที่กรอง
+        // แสดงชื่อและรหัสพนักงานจากแถวสุดท้าย
         if (filteredData.length > 0) {
           const lastRow = filteredData[filteredData.length - 1];
-          document.getElementById('name-info').textContent = lastRow[2]; // ชื่อ (คอลัมน์ที่ 2)
-          document.getElementById('employee-id-info').textContent = lastRow[3]; // รหัสพนักงาน (คอลัมน์ที่ 3)
+          document.getElementById('name-info').textContent = lastRow[2];
+          document.getElementById('employee-id-info').textContent = lastRow[3];
         }
 
-        buildTable('data-table', filteredData); // สร้างตารางแสดงข้อมูล
+        buildTable('data-table', filteredData);
       } catch (error) {
         console.error('Error fetching data:', error);
         document.getElementById('data-table').innerHTML = '<tr><td colspan="3" class="text-center">เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
@@ -129,7 +128,7 @@
       }
     }
 
-    // ฟังก์ชันสำหรับจัดรูปแบบวันที่
+    // ฟังก์ชันจัดรูปแบบวันที่
     function formatDate(dateString) {
       const date = new Date(dateString);
       const day = String(date.getDate()).padStart(2, '0');
@@ -138,7 +137,7 @@
       return `${day}/${month}/${year}`;
     }
 
-    // ฟังก์ชันสำหรับจัดรูปแบบเวลา
+    // ฟังก์ชันจัดรูปแบบเวลา
     function formatTime(timeString) {
       const date = new Date(timeString);
       const hours = String(date.getHours()).padStart(2, '0');
@@ -146,16 +145,15 @@
       return `${hours}:${minutes}`;
     }
 
-    // ฟังก์ชันสำหรับสร้างตารางแสดงข้อมูล
+    // ฟังก์ชันสร้างตารางแสดงข้อมูล
     function buildTable(tableId, values) {
       const table = document.getElementById(tableId);
       table.innerHTML = '';
 
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      const reversedValues = values.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
+      const reversedValues = values.slice().reverse(); // แสดงข้อมูลล่าสุดก่อน
 
-      // แสดงข้อมูลในแต่ละแถว
       reversedValues.slice(startIndex, endIndex).forEach(row => {
         const tr = document.createElement('tr');
         tr.classList.add('border-b', 'hover:bg-slate-100');
@@ -163,48 +161,43 @@
         // ดึงค่าจากคอลัมน์ 4 และคอลัมน์ 12
         const col4 = row[4];
         const col12 = row[12];
-        // รวมข้อความในรูปแบบ "row4(row12)" หาก col12 มีค่า
+        // รวมข้อความในรูปแบบ "row4(row12)" หากคอลัมน์ 12 มีค่า
         let statusText = col4;
         if (col12 && col12.trim() !== "") {
           statusText = `${col4}(${col12})`;
         }
 
-        // กำหนดสีของ badge ตามเงื่อนไขจากค่าในคอลัมน์ 4 (สถานะหลัก)
+        // แยกสีเฉพาะสำหรับ "เข้างาน" (สีเขียว) และ "ออกงาน" (สีแดง)
         let statusColor = 'gray';
         let dotColor = 'gray';
         if (col4 === 'เข้างาน') {
-          if (col12 && col12.includes('สาย')) {
-            statusColor = 'yellow';
-            dotColor = 'yellow';
-          } else {
-            statusColor = 'green';
-            dotColor = 'green';
-          }
+          statusColor = 'green';
+          dotColor = 'green';
         } else if (col4 === 'ออกงาน') {
           statusColor = 'red';
           dotColor = 'red';
         }
 
-        // สร้างเซลล์สำหรับสถานะ พร้อมแสดง badge ที่มีวง (dot)
+        // สร้างเซลล์สำหรับสถานะ โดยจัดข้อความให้อยู่กลาง (justify-center)
         let td = document.createElement('td');
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         td.innerHTML = `
-          <span class="flex items-center border border-${statusColor}-500 rounded-full px-2 py-1 text-${statusColor}-500">
+          <span class="flex items-center justify-center border border-${statusColor}-500 rounded-full px-2 py-1 text-${statusColor}-500">
             <span class="h-2 w-2 bg-${dotColor}-500 rounded-full mr-2"></span>
             ${statusText}
           </span>
         `;
         tr.appendChild(td);
 
-        // เซลล์สำหรับหมายเหตุ (ใช้ข้อมูลจากคอลัมน์ 5)
+        // เซลล์สำหรับหมายเหตุ (จัดข้อความให้อยู่กลาง)
         td = document.createElement('td');
+        td.classList.add('py-2', 'px-4', 'whitespace-nowrap', 'text-center');
         td.textContent = row[5];
-        td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         tr.appendChild(td);
 
-        // เซลล์สำหรับวันที่และเวลา (รวมข้อมูลจากคอลัมน์ 6 และ 7)
+        // เซลล์สำหรับวันที่และเวลา (จัดข้อความให้อยู่กลาง)
         td = document.createElement('td');
-        td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
+        td.classList.add('py-2', 'px-4', 'whitespace-nowrap', 'text-center');
         td.innerHTML = `
           <div>${formatDate(row[6])}</div>
           <div class="text-gray-500 text-sm">${formatTime(row[7])}</div>
@@ -214,23 +207,23 @@
         table.appendChild(tr);
       });
 
-      updatePaginationControls(values.length); // อัปเดตตัวควบคุมการแบ่งหน้า
+      updatePaginationControls(values.length);
     }
 
-    // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
+    // ฟังก์ชันอัปเดตตัวควบคุมการแบ่งหน้า
     function updatePaginationControls(totalItems) {
       const totalPages = Math.ceil(totalItems / itemsPerPage);
       const paginationControls = document.getElementById('pagination-controls');
       paginationControls.innerHTML = '';
 
-      if (totalPages <= 1) return; // ไม่มีการแบ่งหน้า หากมีหน้าจำนวนเดียว
+      if (totalPages <= 1) return;
 
       for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement('button');
         pageButton.textContent = i;
         pageButton.addEventListener('click', () => {
           currentPage = i;
-          fetchData(document.getElementById('userId').value); // ดึงข้อมูลใหม่เมื่อเปลี่ยนหน้า
+          fetchData(document.getElementById('userId').value);
         });
         pageButton.classList.add(
           'py-1',
@@ -244,7 +237,7 @@
           'focus:ring-blue-500'
         );
         if (i === currentPage) {
-          pageButton.classList.add('bg-black', 'text-white'); // ไฮไลท์หน้าปัจจุบัน
+          pageButton.classList.add('bg-black', 'text-white');
         } else {
           pageButton.classList.add('bg-white', 'text-black');
         }
