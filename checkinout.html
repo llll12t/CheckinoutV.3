@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>การเข้าออกงาน</title>
+    <title>บันทึกการเข้าออกงาน</title>
     <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความแจ้งเตือน -->
@@ -53,14 +53,9 @@
 
 <body class="bg-white h-screen">
     <!-- กล่องใหญ่ที่เป็นกล่องสีขาวสำหรับเนื้อหาหลักของหน้า -->
-    <div class="max-w-md mx-auto p-6 m-2 rounded-lg shadow-md">
-        <!-- ส่วนนี้แสดงข้อความต้อนรับและชื่อผู้ใช้ -->
-        <div class="p-2">
-            <span>👋🏻 สวัสดี </span>
-            <input type="text" id="displayName" name="displayName">
-        </div>
+    <div class="max-w-md mx-auto p-6 m-2 ">
         <!-- กล่องแสดงวันที่และเวลา -->
-        <div class="bg-slate-800 border rounded-lg text-white text-center my-4 py-8 px-4">
+        <div class="bg-slate-800 border rounded-lg text-white text-center mb-4 py-8 px-4">
             <div class="daytime">
                 <div id="date"></div>
                 <div class="text-5xl text-bold" id="time"></div>
@@ -77,47 +72,66 @@
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
                 <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, รหัสพนักงาน, และตำแหน่ง -->
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnBData"
+                <div class="w-full p-2 space-y-6">
+                    <!-- ฟิลด์ชื่อ-สกุล -->
+                    <div class="relative">
+                        <label for="columnBData" class="absolute -top-2 left-3 text-xs bg-slate-200 px-1 text-slate-800 font-semibold">ชื่อ-สกุล</label>
+                        <input type="text" class="w-full px-4 py-3 text-sm bg-slate-200 border-2 border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-800" id="columnBData"
                         placeholder="ชื่อ-สกุล" name="columnBData" required>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnCData"
+                <div class="w-full p-2 space-y-6">
+
+                <div class="relative">
+                    <label for="columnCData" class="absolute -top-2 left-3 text-xs bg-slate-200 px-1 text-slate-800 font-semibold">รหัสพนักงาน</label>
+                <input type="text" class="w-full px-4 py-3 text-sm bg-slate-200 border-2 border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-800" id="columnCData"
                         placeholder="รหัสพนักงาน" name="columnCData" required>
                 </div>
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnDData"
+            </div>
+                <div class="w-full p-2 space-y-6">
+
+                <div class="relative">
+                    <label for="columnDData" class="absolute -top-2 left-3 text-xs bg-slate-200 px-1 text-slate-800 font-semibold">ตำแหน่ง</label>
+                    <input type="text" class="w-full px-4 py-3 text-sm bg-slate-200 border-2 border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-800" id="columnDData"
                         placeholder="ตำแหน่ง" name="columnDData" required>
                 </div>
+            </div>
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
                 <input type="hidden" id="columnAData" name="columnAData" />
             </div>
 
-            <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
             <div class="switch-field mt-4 mb-4 space-y-2">
-                <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-three" name="switch-job" value="เข้างาน" class="hidden " />
-                    <label for="radio-three"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
-                        เข้างาน
+                <!-- แถวบน: เข้างาน (ซ้าย) และ ออกงาน (ขวา) -->
+                <div class="flex space-x-2">
+                  <!-- ปุ่ม เข้างาน -->
+                  <div class="w-1/2 flex items-center">
+                    <input type="radio" id="radio-three" name="switch-job" value="เข้างาน" class="hidden" />
+                    <label for="radio-three" class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full flex items-center justify-center">
+                      <!-- จุดสีเขียว -->
+                      <span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                      เข้างาน
                     </label>
-                </div>
-                <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-four" name="switch-job" value="ระหว่างวัน" class="hidden " />
-                    <label for="radio-four"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
-                        ระหว่างวัน
+                  </div>
+                  <!-- ปุ่ม ออกงาน -->
+                  <div class="w-1/2 flex items-center">
+                    <input type="radio" id="radio-five" name="switch-job" value="ออกงาน" class="hidden" />
+                    <label for="radio-five" class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full flex items-center justify-center">
+                      <!-- จุดสีแดง -->
+                      <span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                      ออกงาน
                     </label>
+                  </div>
                 </div>
-                <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-five" name="switch-job" value="ออกงาน" class="hidden " />
-                    <label for="radio-five"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
-                        ออกงาน
-                    </label>
+                <!-- แถวล่าง: ปุ่ม ระหว่างวัน -->
+                <div class="flex pt-2">
+                  <input type="radio" id="radio-four" name="switch-job" value="ระหว่างวัน" class="hidden" />
+                  <label for="radio-four" class="cursor-pointer border border-gray-300 py-3  rounded-lg w-full text-center">
+                    ระหว่างวัน
+                  </label>
                 </div>
-            </div>
+              </div>
+              
             <input type="hidden" id="jobInput" name="jobInput" required>
             <!-- หมายเหตุ -->
             <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
@@ -189,14 +203,15 @@
 </body>
 <script>
 
-     // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec'; // APPSCRIP MEMBER
-     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';  // APPSCRIP CHECK-IN-OUT
-     const LIFF_ID = '2006740306-qp2xNvgM'; // Liff ID
+    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+    const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec'; // APPSCRIP MEMBER
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';  // APPSCRIP CHECK-IN-OUT
+    const LIFF_ID = '2006740306-qp2xNvgM'; // Liff ID
+
 
     // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-        await initializeLiff();
+        //await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
@@ -310,8 +325,8 @@
         const switchCameraBtn = document.getElementById("switch-camera-btn");
         const previewImage = document.getElementById("preview");
         let stream;
-        let currentFacingMode = "user"; // เริ่มต้นที่กล้องหลัง
-        // let currentFacingMode = "environment"; // เริ่มต้นที่กล้องหลัง
+        let currentFacingMode = "environment"; // เริ่มต้นที่กล้องหลัง
+        // let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
 
 
         // ฟังก์ชันเปิดกล้อง
