@@ -240,7 +240,6 @@
             const userId = profile.userId;
             // กำหนดค่า userId และ displayName ในฟอร์ม
             document.getElementById('userId').value = userId;
-            document.getElementById('displayName').value = profile.displayName;
             // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
             await fetchData(userId);
         } catch (error) {
