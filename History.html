@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="th">
 
 <head>
@@ -67,6 +67,7 @@
   <script>
     // URL ของ Web App ที่คุณ Deploy ไว้
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
+
     const LIFF_ID = '2006740306-qLWyP3w6'; // LIFF ID
 
     // จำนวนรายการที่จะแสดงต่อหน้า
@@ -80,21 +81,21 @@
 
     // ฟังก์ชันเริ่มต้น LIFF
     async function initializeLiff() {
-      await liff.init({ liffId: `${LIFF_ID}` });
+      await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ LIFF ID ที่กำหนด
       if (liff.isLoggedIn()) {
-        getUserProfile();
+        getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
       } else {
-        liff.login();
+        liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้พาไปหน้าเข้าสู่ระบบ
       }
     }
 
     // ฟังก์ชันดึงข้อมูลโปรไฟล์ของผู้ใช้
     async function getUserProfile() {
       try {
-        const profile = await liff.getProfile();
+        const profile = await liff.getProfile(); // ดึงข้อมูลโปรไฟล์จาก LIFF
         document.getElementById('userId').value = profile.userId;
         document.getElementById('displayName').value = profile.displayName;
-        fetchData(profile.userId);
+        fetchData(profile.userId); // ดึงข้อมูลการบันทึกโดยใช้ userId
       } catch (error) {
         console.error('Error getting profile data:', error);
       }
@@ -102,13 +103,13 @@
 
     // ฟังก์ชันดึงข้อมูลจาก Web App
     async function fetchData(userId) {
-      document.getElementById('loading').style.display = 'block';
+      document.getElementById('loading').style.display = 'block'; // แสดงสถานะการโหลด
       try {
         const response = await fetch(`${WEB_APP_URL}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
+        const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
         console.log('Fetched data:', data);
         const filteredData = data.filter(row => row[11] === userId); // กรองข้อมูลตาม userId (คอลัมน์ที่ 11)
 
@@ -119,7 +120,7 @@
           document.getElementById('employee-id-info').textContent = lastRow[3]; // รหัสพนักงาน (คอลัมน์ที่ 3)
         }
 
-        buildTable('data-table', filteredData);
+        buildTable('data-table', filteredData); // สร้างตารางแสดงข้อมูล
       } catch (error) {
         console.error('Error fetching data:', error);
         document.getElementById('data-table').innerHTML = '<tr><td colspan="3" class="text-center">เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
@@ -152,54 +153,56 @@
 
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      const reversedValues = values.slice().reverse(); // กลับลำดับเพื่อให้ข้อมูลล่าสุดอยู่ด้านบน
+      const reversedValues = values.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
 
+      // แสดงข้อมูลในแต่ละแถว
       reversedValues.slice(startIndex, endIndex).forEach(row => {
         const tr = document.createElement('tr');
         tr.classList.add('border-b', 'hover:bg-slate-100');
 
-        // ดึงสถานะจากคอลัมน์ M (index 12)
-        let status = row[12]; // สถานะเบื้องต้น เช่น "เข้างาน" หรือ "ออกงาน"
-
-        // ถ้าเป็น "เข้างาน" ให้ตรวจสอบเวลาจากคอลัมน์ที่ 7 เทียบกับเวลาเป้าหมาย (08:30)
-        if (status === 'เข้างาน') {
-          const checkinTime = new Date(row[7]); // เวลาจริงที่บันทึก
-          const scheduledTime = new Date(row[6]); // ใช้วันที่จากคอลัมน์ที่ 6
-          scheduledTime.setHours(8, 30, 0, 0); // กำหนดเวลาเป้าหมาย เช่น 08:30
-          if (checkinTime > scheduledTime) {
-            status = 'เข้างาน (สาย)';
-          }
+        // ดึงค่าจากคอลัมน์ 4 และคอลัมน์ 12
+        const col4 = row[4];
+        const col12 = row[12];
+        // รวมข้อความในรูปแบบ "row4(row12)" หาก col12 มีค่า
+        let statusText = col4;
+        if (col12 && col12.trim() !== "") {
+          statusText = `${col4}(${col12})`;
         }
 
-        // กำหนดสีของสถานะและวง (dot) ตามสถานะที่แสดง
+        // กำหนดสีของ badge ตามเงื่อนไขจากค่าในคอลัมน์ 4 (สถานะหลัก)
         let statusColor = 'gray';
         let dotColor = 'gray';
-        if (status.startsWith('เข้างาน')) {
-          statusColor = 'green';
-          dotColor = 'green';
-        } else if (status.startsWith('ออกงาน')) {
+        if (col4 === 'เข้างาน') {
+          if (col12 && col12.includes('สาย')) {
+            statusColor = 'yellow';
+            dotColor = 'yellow';
+          } else {
+            statusColor = 'green';
+            dotColor = 'green';
+          }
+        } else if (col4 === 'ออกงาน') {
           statusColor = 'red';
           dotColor = 'red';
         }
 
-        // สร้างคอลัมน์แสดงสถานะพร้อมวง (dot)
+        // สร้างเซลล์สำหรับสถานะ พร้อมแสดง badge ที่มีวง (dot)
         let td = document.createElement('td');
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         td.innerHTML = `
           <span class="flex items-center border border-${statusColor}-500 rounded-full px-2 py-1 text-${statusColor}-500">
             <span class="h-2 w-2 bg-${dotColor}-500 rounded-full mr-2"></span>
-            ${status}
+            ${statusText}
           </span>
         `;
         tr.appendChild(td);
 
-        // เพิ่มคอลัมน์สำหรับหมายเหตุ (สมมุติว่าอยู่ในคอลัมน์ 5)
+        // เซลล์สำหรับหมายเหตุ (ใช้ข้อมูลจากคอลัมน์ 5)
         td = document.createElement('td');
         td.textContent = row[5];
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         tr.appendChild(td);
 
-        // รวมวันที่และเวลาจากคอลัมน์ที่กำหนด (ตัวอย่าง row[6] และ row[7])
+        // เซลล์สำหรับวันที่และเวลา (รวมข้อมูลจากคอลัมน์ 6 และ 7)
         td = document.createElement('td');
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         td.innerHTML = `
@@ -211,7 +214,7 @@
         table.appendChild(tr);
       });
 
-      updatePaginationControls(values.length);
+      updatePaginationControls(values.length); // อัปเดตตัวควบคุมการแบ่งหน้า
     }
 
     // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
@@ -220,14 +223,14 @@
       const paginationControls = document.getElementById('pagination-controls');
       paginationControls.innerHTML = '';
 
-      if (totalPages <= 1) return;
+      if (totalPages <= 1) return; // ไม่มีการแบ่งหน้า หากมีหน้าจำนวนเดียว
 
       for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement('button');
         pageButton.textContent = i;
         pageButton.addEventListener('click', () => {
           currentPage = i;
-          fetchData(document.getElementById('userId').value);
+          fetchData(document.getElementById('userId').value); // ดึงข้อมูลใหม่เมื่อเปลี่ยนหน้า
         });
         pageButton.classList.add(
           'py-1',
@@ -241,7 +244,7 @@
           'focus:ring-blue-500'
         );
         if (i === currentPage) {
-          pageButton.classList.add('bg-black', 'text-white');
+          pageButton.classList.add('bg-black', 'text-white'); // ไฮไลท์หน้าปัจจุบัน
         } else {
           pageButton.classList.add('bg-white', 'text-black');
         }
