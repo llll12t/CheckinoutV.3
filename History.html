@@ -158,15 +158,26 @@
         const tr = document.createElement('tr');
         tr.classList.add('border-b', 'hover:bg-slate-100');
 
-        // ดึงสถานะการเข้างานจากคอลัมน์ M (index 12)
-        const status = row[12];
+        // ดึงสถานะจากคอลัมน์ M (index 12)
+        let status = row[12]; // สถานะเบื้องต้น เช่น "เข้างาน" หรือ "ออกงาน"
+
+        // ถ้าเป็น "เข้างาน" ให้ตรวจสอบเวลาจากคอลัมน์ที่ 7 เทียบกับเวลาเป้าหมาย (08:30)
+        if (status === 'เข้างาน') {
+          const checkinTime = new Date(row[7]); // เวลาจริงที่บันทึก
+          const scheduledTime = new Date(row[6]); // ใช้วันที่จากคอลัมน์ที่ 6
+          scheduledTime.setHours(8, 30, 0, 0); // กำหนดเวลาเป้าหมาย เช่น 08:30
+          if (checkinTime > scheduledTime) {
+            status = 'เข้างาน (สาย)';
+          }
+        }
+
+        // กำหนดสีของสถานะและวง (dot) ตามสถานะที่แสดง
         let statusColor = 'gray';
         let dotColor = 'gray';
-
-        if (status === 'เข้างาน') {
+        if (status.startsWith('เข้างาน')) {
           statusColor = 'green';
           dotColor = 'green';
-        } else if (status === 'ออกงาน') {
+        } else if (status.startsWith('ออกงาน')) {
           statusColor = 'red';
           dotColor = 'red';
         }
@@ -182,7 +193,7 @@
         `;
         tr.appendChild(td);
 
-        // เพิ่มหมายเหตุ (สมมุติว่าอยู่ในคอลัมน์ 5)
+        // เพิ่มคอลัมน์สำหรับหมายเหตุ (สมมุติว่าอยู่ในคอลัมน์ 5)
         td = document.createElement('td');
         td.textContent = row[5];
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
