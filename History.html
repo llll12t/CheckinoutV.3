@@ -29,7 +29,7 @@
       <input type="hidden" id="displayName" name="displayName">
 
       <!-- แสดงข้อมูลหลัก -->
-      <div id="main-info" class="bg-slate-100 rounded shadow-sm p-6 mb-6 text-sm flex flex-col space-y-2">
+      <div id="main-info" class="mb-6 text-sm flex flex-col space-y-2">
         <div class="flex items-center">
           <strong>ชื่อ:</strong>
           <span id="name-info" class="font-medium ml-1"></span>
@@ -109,6 +109,7 @@
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log('Fetched data:', data);
         const filteredData = data.filter(row => row[11] === userId); // กรองข้อมูลตาม userId (คอลัมน์ที่ 11)
 
         // แสดงชื่อและรหัสพนักงานจากแถวสุดท้าย
@@ -157,16 +158,22 @@
         const tr = document.createElement('tr');
         tr.classList.add('border-b', 'hover:bg-slate-100');
 
-        // ดึงค่าจากคอลัมน์ 4 และคอลัมน์ 12
+        // ดึงค่าจากคอลัมน์ 4, 12 และ 13
         const col4 = row[4];
         const col12 = row[12];
-        // รวมข้อความในรูปแบบ "row4(row12)" หากคอลัมน์ 12 มีค่า
+        const col13 = row[13];
+
+        // รวมข้อความในรูปแบบ "row4(row12 row13 น.)" หากมีข้อมูลในคอลัมน์ 12 และ 13
         let statusText = col4;
-        if (col12 && col12.trim() !== "") {
+        if (col12 && col12.trim() !== "" && col13 && col13.toString().trim() !== "") {
+          statusText = `${col4}(${col12} ${col13} น.)`;
+        } else if (col12 && col12.trim() !== "") {
           statusText = `${col4}(${col12})`;
+        } else if (col13 && col13.toString().trim() !== "") {
+          statusText = `${col4}(${col13} น.)`;
         }
 
-        // แยกสีเฉพาะสำหรับ "เข้างาน" (สีเขียว) และ "ออกงาน" (สีแดง)
+        // กำหนดสีสำหรับสถานะ "เข้างาน" (สีเขียว) และ "ออกงาน" (สีแดง)
         let statusColor = 'gray';
         let dotColor = 'gray';
         if (col4 === 'เข้างาน') {
@@ -177,12 +184,12 @@
           dotColor = 'red';
         }
 
-        // สร้างเซลล์สำหรับสถานะ โดยจัดข้อความให้อยู่กลาง (justify-center)
+        // สร้างเซลล์สำหรับสถานะ โดยจัดข้อความให้อยู่กลาง
         let td = document.createElement('td');
         td.classList.add('py-2', 'px-4', 'whitespace-nowrap');
         td.innerHTML = `
           <span class="flex items-center justify-center border border-${statusColor}-500 rounded-full px-2 py-1 text-${statusColor}-500">
-            <span class="h-2 w-2 bg-${dotColor}-500 rounded-full mr-2"></span>
+            <span class="h-2 w-2 bg-${dotColor}-500 rounded-lg mr-2"></span>
             ${statusText}
           </span>
         `;
@@ -226,7 +233,7 @@
         });
         pageButton.classList.add(
           'py-1',
-          'px-2',
+          'px-3',
           'm-1',
           'border',
           'rounded',
