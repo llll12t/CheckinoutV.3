@@ -437,6 +437,12 @@
             showCancelButton: true,
             confirmButtonText: 'ยืนยัน',
             cancelButtonText: 'ยกเลิก',
+            customClass: {
+                confirmButton: 'px-10',
+                cancelButton: 'px-4'
+            }
+
+
         }).then((result) => {
             if (result.isConfirmed) {
                 // ปิดปุ่มส่งข้อมูลเพื่อป้องกันการส่งซ้ำ
