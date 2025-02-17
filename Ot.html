@@ -165,22 +165,20 @@
     window.onload = async function () {
       await initializeLiff();
       // ตั้งค่า Flatpickr สำหรับวันที่ (otDate) และเวลา (startTime, endTime)
-      flatpickr("#otDate", {
-        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
-        dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "d-m-Y",
-        defaultDate: "today",
-        locale: Object.assign({}, Flatpickr.l10ns.th, { firstDayOfWeek: 0 }),
-        onDayCreate: function(dObj, dStr, fp, dayElem) {
-          const day = dayElem.dateObj.getDay();
-          if(day === 0) {         // วันอาทิตย์
-            dayElem.classList.add('sunday');
-          } else if(day === 6) {  // วันเสาร์
-            dayElem.classList.add('saturday');
-          }
-        }
-      });
+      // กำหนด locale พร้อมปรับ firstDayOfWeek ให้เป็นวันอาทิตย์ (0)
+  flatpickr("#otDate", {
+    dateFormat: "Y-m-d",
+    defaultDate: "today",
+    locale: Object.assign({}, Flatpickr.l10ns.th, { firstDayOfWeek: 0 }),
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+      const day = dayElem.dateObj.getDay();
+      if(day === 0) {         // วันอาทิตย์
+        dayElem.classList.add('sunday');
+      } else if(day === 6) {  // วันเสาร์
+        dayElem.classList.add('saturday');
+      }
+    }
+  });
 
       flatpickr("#startTime", {
         disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
