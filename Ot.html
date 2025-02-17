@@ -165,6 +165,7 @@
       await initializeLiff();
       // ตั้งค่า Flatpickr สำหรับวันที่ (otDate) และเวลา (startTime, endTime)
       flatpickr("#otDate", {
+        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         dateFormat: "Y-m-d",
         defaultDate: "today",
         locale: "th",  // ตั้งค่าภาษาไทย
