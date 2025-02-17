@@ -19,13 +19,14 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
   <style>
-    /* ปรับสีสำหรับวันเสาร์และวันอาทิตย์ */
-    .flatpickr-day.saturday {
-      background-color: #e6e6fa !important; /* สีม่วงอ่อน */
-    }
-    .flatpickr-day.sunday {
-      background-color: #ffcccc !important; /* สีแดงอ่อน */
-    }
+   /* ปรับสีสำหรับวันเสาร์และวันอาทิตย์ พร้อมกำหนดให้เป็นสี่เหลี่ยม */
+  .flatpickr-day.saturday {
+    background-color: #e6e6fa !important; /* สีม่วงอ่อน */
+    border-radius: 0 !important;
+  }
+  .flatpickr-day.sunday {
+    background-color: #ffcccc !important; /* สีแดงอ่อน */
+    border-radius: 0 !important;
   </style>
 
   <style>
@@ -167,8 +168,10 @@
       flatpickr("#otDate", {
         disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d-m-Y",
         defaultDate: "today",
-        locale: "th",  // ตั้งค่าภาษาไทย
+        locale: Object.assign({}, Flatpickr.l10ns.th, { firstDayOfWeek: 0 }),
         onDayCreate: function(dObj, dStr, fp, dayElem) {
           const day = dayElem.dateObj.getDay();
           if(day === 0) {         // วันอาทิตย์
