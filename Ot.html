@@ -12,9 +12,21 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- นำเข้า LIFF SDK ของ LINE -->
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-  <!-- นำเข้า Flatpickr CSS และ JS -->
+  <!-- นำเข้า Flatpickr CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- นำเข้า Flatpickr และไฟล์ภาษาไทย -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+  <style>
+    /* ปรับสีสำหรับวันเสาร์และวันอาทิตย์ */
+    .flatpickr-day.saturday {
+      background-color: #e6e6fa !important; /* สีม่วงอ่อน */
+    }
+    .flatpickr-day.sunday {
+      background-color: #ffcccc !important; /* สีแดงอ่อน */
+    }
+  </style>
 
   <style>
     #loadingOverlay {
@@ -153,11 +165,17 @@
       await initializeLiff();
       // ตั้งค่า Flatpickr สำหรับวันที่ (otDate) และเวลา (startTime, endTime)
       flatpickr("#otDate", {
-        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "d-m-Y",
-        defaultDate: "today"
+        defaultDate: "today",
+        locale: "th",  // ตั้งค่าภาษาไทย
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+          const day = dayElem.dateObj.getDay();
+          if(day === 0) {         // วันอาทิตย์
+            dayElem.classList.add('sunday');
+          } else if(day === 6) {  // วันเสาร์
+            dayElem.classList.add('saturday');
+          }
+        }
       });
 
       flatpickr("#startTime", {
