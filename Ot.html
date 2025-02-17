@@ -153,11 +153,15 @@
       await initializeLiff();
       // ตั้งค่า Flatpickr สำหรับวันที่ (otDate) และเวลา (startTime, endTime)
       flatpickr("#otDate", {
+        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d-m-Y",
         defaultDate: "today"
       });
 
       flatpickr("#startTime", {
+        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i",
@@ -166,6 +170,7 @@
       });
 
       flatpickr("#endTime", {
+        disableMobile: true, // บังคับให้ Flatpickr ใช้ UI แบบ custom
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i",
