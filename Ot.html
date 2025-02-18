@@ -21,43 +21,40 @@
 </head>
 
 <body>
- <div class="max-w-md mx-auto p-4">
-  <!-- Container ที่มี position: relative -->
-  <div class="relative">
-    <!-- Overlay สำหรับ loading ครอบคลุม container นี้เท่านั้น -->
+ <div class="flex justify-center items-center">
+  <!-- เพิ่ม relative เพื่อให้ absolute ของ overlay อ้างอิงกับ card นี้ -->
+  <div class="bg-slate-800 relative rounded-lg shadow-xl p-6">
+    <!-- loadingOverlay อยู่ภายใน card -->
     <div id="loadingOverlay" class="hidden absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10">
       <div class="text-center text-white text-xl">ค้นหารายชื่อ..</div>
     </div>
 
-    <!-- Card ที่แสดงข้อมูล -->
-    <div class="flex justify-center items-center">
-      <div class="bg-slate-800 rounded-lg shadow-xl p-6">
-        <div class="flex items-center mb-4">
-          <img class="mx-auto w-24 h-24 object-cover rounded-lg mr-4" id="columnEData"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
-          <div>
-            <input type="text" class="input-field bg-slate-50 text-white text-md font-bold bg-opacity-0" 
-              id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
-            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0" 
-              id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
-            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0" 
-              id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
-          </div>
-        </div>
-
-        <div class="p-4 bg-slate-600 rounded-md">
-          <div class="flex justify-between">
-            <h1 class="font-light text-white text-center text-md">🕔 </h1>
-            <input type="text" class="input-field text-md bg-white text-white text-bold bg-opacity-0" 
-              id="columnGData" name="columnGData" readonly>
-          </div>
-        </div>
-        <input type="hidden" id="userId" name="userId">
-        <input type="hidden" id="columnAData" name="columnAData">
+    <div class="flex items-center mb-4">
+      <img class="mx-auto w-24 h-24 object-cover rounded-lg mr-4" id="columnEData"
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
+      <div>
+        <input type="text"
+          class="input-field bg-slate-50 text-white text-md font-bold bg-opacity-0"
+          id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
+        <input type="text" class="input-field text-white text-md bg-white bg-opacity-0"
+          id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
+        <input type="text" class="input-field text-white text-md bg-white bg-opacity-0"
+          id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
       </div>
     </div>
+
+    <div class="p-4 bg-slate-600 rounded-md">
+      <div class="flex justify-between">
+        <h1 class="font-light text-white text-center text-md">🕔</h1>
+        <input type="text" class="input-field text-md bg-white text-white text-bold bg-opacity-0"
+          id="columnGData" name="columnGData" readonly>
+      </div>
+    </div>
+    <input type="hidden" id="userId" name="userId">
+    <input type="hidden" id="columnAData" name="columnAData">
   </div>
 </div>
+
 
     <div class="max-w-md mx-auto py-4">
       <form>
