@@ -12,42 +12,6 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- นำเข้า LIFF SDK ของ LINE -->
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-  <style>
-    /* การตั้งค่าสำหรับ overlay ที่ใช้แสดงสถานะการโหลด */
-    #loadingOverlay {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgb(255 255 255 / 80%);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    /* การตั้งค่าสำหรับ container ของการโหลด */
-    .loading-container {
-      position: relative;
-    }
-
-    /* การตั้งค่าการกระพริบของข้อความ */
-    @keyframes blink {
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-    }
-
-    .blink {
-      animation: blink 1s infinite;
-    }
-  </style>
 </head>
 
 <body class="bg-white h-screen">
@@ -57,7 +21,7 @@
     <div class="bg-slate-800 border rounded-lg text-white text-center mb-4 py-8 px-4">
       <div class="daytime">
         <div id="date"></div>
-        <div class="text-5xl text-bold" id="time"></div>
+        <div class="text-5xl font-bold" id="time"></div>
         <!-- ฟิลด์ที่ซ่อนอยู่สำหรับรับค่า วันที่ และ เวลา -->
         <input type="date" id="todayInput" name="todayInput" class="hidden" />
         <input type="time" id="currentTime" name="currentTime" class="hidden" />
@@ -66,8 +30,8 @@
     <!-- ขั้นตอนที่ 1: แสดงข้อมูลผู้ใช้ -->
     <div id="step1">
       <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
-      <div class="loading-container bg-slate-100 p-4 rounded-lg">
-        <div id="loadingOverlay">
+      <div class="relative bg-slate-100 p-4 rounded-lg">
+        <div id="loadingOverlay" class="hidden absolute top-0 left-0 w-full h-full bg-white/80 flex items-center justify-center z-[1000]">
           <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
         </div>
         <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, รหัสพนักงาน, และตำแหน่ง -->
@@ -132,7 +96,7 @@
         <div class="flex pt-2">
           <input type="radio" id="radio-four" name="switch-job" value="ระหว่างวัน" class="hidden" />
           <label for="radio-four"
-            class="cursor-pointer border border-gray-300 py-3  rounded-lg w-full text-center">
+            class="cursor-pointer border border-gray-300 py-3 rounded-lg w-full text-center">
             ระหว่างวัน
           </label>
         </div>
@@ -140,7 +104,7 @@
 
       <input type="hidden" id="jobInput" name="jobInput" required>
       <!-- หมายเหตุ -->
-      <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
+      <textarea class="w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
         id="noteInput"></textarea>
       <!-- ปุ่มสำหรับไปยังขั้นตอนถัดไป -->
       <div class="bg-slate-800 text-white text-center rounded-lg my-4">
@@ -185,7 +149,7 @@
       <div class="submit">
         <div class="w-full mb-4 rounded-lg bg-slate-800 text-white">
           <button type="button" onclick="getLocation()"
-            class="w-full p-4 rounded-lg blink">กดเพื่อยืนยันที่อยู่ของคุณ</button>
+            class="w-full p-4 rounded-lg animate-pulse">กดเพื่อยืนยันที่อยู่ของคุณ</button>
         </div>
         <div id="locationInfo" name="locationInfo"
           class="bg-white p-4 rounded-lg shadow-sm max-w-sm mx-auto my-4">
@@ -206,565 +170,564 @@
       <iframe id="mapIframe" class="p-2 rounded-lg shadow-md" width="100%" height="240" frameborder="0"
         style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
       <div class="input-group my-4 py-4 flex justify-between">
-        <button class="w-1/4 text-center p-4  m-2 rounded-lg bg-gray-300" onclick="prevStep()">กลับ</button>
+        <button class="w-1/4 text-center p-4 m-2 rounded-lg bg-gray-300" onclick="prevStep()">กลับ</button>
         <button id="submitButton" class="w-3/4 text-center p-4 m-2 rounded-lg bg-slate-800 text-white"
           onclick="submitForm()">บันทึกข้อมูล</button>
       </div>
     </div>
   </div>
-</body>
 
-<script>
-  // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-  const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
-  const LIFF_ID = '2006740306-qp2xNvgM'; // LIFF ID
+  <script>
+    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+    const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
+    const LIFF_ID = '2006740306-qp2xNvgM'; // LIFF ID
 
-  // เริ่มต้น LIFF เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
-  window.onload = async function () {
-    await initializeLiff();
-  };
+    // เริ่มต้น LIFF เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+    window.onload = async function () {
+      await initializeLiff();
+    };
 
-  // ฟังก์ชันเริ่มต้น LIFF (Line Front-end Framework)
-  async function initializeLiff() {
-    try {
-      // เริ่มต้น LIFF โดยใช้ LIFF ID ที่กำหนด
-      await liff.init({ liffId: `${LIFF_ID}` });
-      if (liff.isLoggedIn()) {
-        getUserProfile();
-      } else {
-        liff.login();
+    // ฟังก์ชันเริ่มต้น LIFF (Line Front-end Framework)
+    async function initializeLiff() {
+      try {
+        // เริ่มต้น LIFF โดยใช้ LIFF ID ที่กำหนด
+        await liff.init({ liffId: `${LIFF_ID}` });
+        if (liff.isLoggedIn()) {
+          getUserProfile();
+        } else {
+          liff.login();
+        }
+      } catch (error) {
+        console.error('Error initializing LIFF:', error);
       }
-    } catch (error) {
-      console.error('Error initializing LIFF:', error);
     }
-  }
 
-  // ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
-  async function getUserProfile() {
-    try {
-      const profile = await liff.getProfile();
-      const userId = profile.userId;
-      document.getElementById('userId').value = userId;
-      // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
-      await fetchData(userId);
-    } catch (error) {
-      console.error('Error getting profile data:', error);
-    }
-  }
-
-  // ดึงข้อมูลจาก Google Apps Script โดยใช้ userId
-  async function fetchData(userId) {
-    showLoading(true);
-    try {
-      const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'fetchData', userId: userId })
-      });
-      const data = await response.json();
-      // กรองแถวที่มี userId ตรงกับที่ต้องการ
-      const userRows = data.filter(row => row[1] === userId);
-      if (userRows.length > 0) {
-        // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 7) จากล่าสุดไปเก่าสุด
-        userRows.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-        displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
-      } else {
-        console.log('No data found for userId:', userId);
+    // ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
+    async function getUserProfile() {
+      try {
+        const profile = await liff.getProfile();
+        const userId = profile.userId;
+        document.getElementById('userId').value = userId;
+        // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
+        await fetchData(userId);
+      } catch (error) {
+        console.error('Error getting profile data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      showLoading(false);
     }
-  }
 
-  // แสดงข้อมูลที่ดึงมาในฟอร์ม
-  function displayData(row) {
-    document.getElementById('columnAData').value = row[1] || '';
-    document.getElementById('columnBData').value = row[2] || '';
-    document.getElementById('columnCData').value = row[3] || '';
-    document.getElementById('columnDData').value = row[4] || '';
-    // ถ้ามี columnEData หรือ columnFData ให้เพิ่ม input ลงในหน้า (หากไม่มีอาจลบส่วนนี้ออก)
-    // document.getElementById('columnEData').value = row[5] || '';
-    // document.getElementById('columnFData').value = row[6] || '';
-  }
-
-  // แสดง/ซ่อนหน้าต่างโหลด
-  function showLoading(isLoading) {
-    const overlay = document.getElementById('loadingOverlay');
-    const inputs = document.querySelectorAll('.input-field');
-    if (isLoading) {
-      overlay.style.display = 'flex';
-      inputs.forEach(input => input.disabled = true);
-    } else {
-      overlay.style.display = 'none';
-      inputs.forEach(input => input.disabled = false);
-    }
-  }
-
-  // การตั้งค่ากล้องและถ่ายรูป
-  const url = `${WEB_APP_URL}`;
-  const columnBData = document.querySelector("#columnBData");
-  const columnCData = document.querySelector("#columnCData");
-  const jobInput = document.querySelector("#jobInput");
-  const noteInput = document.querySelector("#noteInput");
-  const todayInput = document.querySelector("#todayInput");
-  const currentTime = document.querySelector("#currentTime");
-  const latitudeInput = document.querySelector("#latitudeInput");
-  const longitudeInput = document.querySelector("#longitudeInput");
-  const fullAddressInput = document.querySelector("#fullAddressInput");
-  const userId = document.querySelector("#userId");
-  const preview = document.getElementById('preview');
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const video = document.getElementById("camera-preview");
-    const startCameraBtn = document.getElementById("start-camera-btn");
-    const captureBtn = document.getElementById("capture-btn");
-    const switchCameraBtn = document.getElementById("switch-camera-btn");
-    const previewImage = document.getElementById("preview");
-    let stream;
-    let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
-
-    // ฟังก์ชันเปิดกล้อง
-    function startCamera() {
-      navigator.mediaDevices.getUserMedia({
-        video: { facingMode: currentFacingMode }
-      })
-        .then(function (videoStream) {
-          stream = videoStream;
-          video.srcObject = videoStream;
-          captureBtn.disabled = false;
-          switchCameraBtn.disabled = false;
-          video.style.display = "block";
-          previewImage.style.display = "none";
-        })
-        .catch(function (error) {
-          console.error("Error accessing the camera: ", error);
-          alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต.");
+    // ดึงข้อมูลจาก Google Apps Script โดยใช้ userId
+    async function fetchData(userId) {
+      showLoading(true);
+      try {
+        const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'fetchData', userId: userId })
         });
-    }
-
-    // ฟังก์ชันถ่ายรูป
-    function capturePhoto() {
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      previewImage.src = canvas.toDataURL("image/png");
-      previewImage.style.display = "block";
-      video.style.display = "none";
-    }
-
-    // ฟังก์ชันสลับกล้อง
-    function switchCamera() {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        const data = await response.json();
+        // กรองแถวที่มี userId ตรงกับที่ต้องการ
+        const userRows = data.filter(row => row[1] === userId);
+        if (userRows.length > 0) {
+          // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 7) จากล่าสุดไปเก่าสุด
+          userRows.sort((a, b) => new Date(b[6]) - new Date(a[6]));
+          displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
+        } else {
+          console.log('No data found for userId:', userId);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        showLoading(false);
       }
-      currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
-      startCamera();
     }
 
-    startCameraBtn.addEventListener("click", startCamera);
-    captureBtn.addEventListener("click", capturePhoto);
-    switchCameraBtn.addEventListener("click", switchCamera);
-  });
-
-  // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนไปขั้นตอนถัดไป
-  function checkPictureAndNextStep() {
-    const capturedImage = document.getElementById('preview').src;
-    if (!capturedImage || capturedImage.includes('No-Image-Placeholder')) {
-      Swal.fire({
-        title: 'แจ้งเตือน!',
-        text: 'กรุณาถ่ายรูปก่อนที่จะไปยังขั้นตอนถัดไป',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-      });
-    } else {
-      nextStep();
+    // แสดงข้อมูลที่ดึงมาในฟอร์ม
+    function displayData(row) {
+      document.getElementById('columnAData').value = row[1] || '';
+      document.getElementById('columnBData').value = row[2] || '';
+      document.getElementById('columnCData').value = row[3] || '';
+      document.getElementById('columnDData').value = row[4] || '';
     }
-  }
 
-  // ส่งข้อมูลฟอร์ม
-  function submitForm() {
-    if (!columnBData.value || !columnCData.value || !jobInput.value || !latitudeInput.value || !longitudeInput.value) {
-      Swal.fire({
-        title: 'แจ้งเตือน!',
-        text: 'กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-    Swal.fire({
-      title: 'ยืนยันการส่งข้อมูล',
-      text: 'คุณแน่ใจหรือไม่ที่ต้องการส่งข้อมูล?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'ยืนยัน',
-      cancelButtonText: 'ยกเลิก',
-      customClass: {
-        confirmButton: 'px-10',
-        cancelButton: 'px-4'
+    // แสดง/ซ่อนหน้าต่างโหลด
+    function showLoading(isLoading) {
+      const overlay = document.getElementById('loadingOverlay');
+      const inputs = document.querySelectorAll('input, textarea');
+      if (isLoading) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        inputs.forEach(input => input.disabled = true);
+      } else {
+        overlay.classList.remove('flex');
+        overlay.classList.add('hidden');
+        inputs.forEach(input => input.disabled = false);
       }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById('submitButton').disabled = true;
-        Swal.fire({
-          title: 'กำลังบันทึกข้อมูล',
-          text: 'กรุณารอสักครู่...',
-          showConfirmButton: false,
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
-        let spt = preview.src.split("base64,")[1];
-        let obj = {
-          base64: spt,
-          name: columnBData.value,
-          role: columnCData.value,
-          job: jobInput.value,
-          note: noteInput.value,
-          today: todayInput.value,
-          time: currentTime.value,
-          lat: latitudeInput.value,
-          long: longitudeInput.value,
-          address: fullAddressInput.value,
-          user: userId.value
-        };
-        fetch(url, {
-          method: "POST",
-          body: JSON.stringify(obj),
+    }
+
+    // การตั้งค่ากล้องและถ่ายรูป
+    const url = `${WEB_APP_URL}`;
+    const columnBData = document.querySelector("#columnBData");
+    const columnCData = document.querySelector("#columnCData");
+    const jobInput = document.querySelector("#jobInput");
+    const noteInput = document.querySelector("#noteInput");
+    const todayInput = document.querySelector("#todayInput");
+    const currentTime = document.querySelector("#currentTime");
+    const latitudeInput = document.querySelector("#latitudeInput");
+    const longitudeInput = document.querySelector("#longitudeInput");
+    const fullAddressInput = document.querySelector("#fullAddressInput");
+    const userId = document.querySelector("#userId");
+    const preview = document.getElementById('preview');
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const video = document.getElementById("camera-preview");
+      const startCameraBtn = document.getElementById("start-camera-btn");
+      const captureBtn = document.getElementById("capture-btn");
+      const switchCameraBtn = document.getElementById("switch-camera-btn");
+      const previewImage = document.getElementById("preview");
+      let stream;
+      let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
+
+      // ฟังก์ชันเปิดกล้อง
+      function startCamera() {
+        navigator.mediaDevices.getUserMedia({
+          video: { facingMode: currentFacingMode }
         })
-          .then(response => response.text())
-          .then(data => {
-            Swal.close();
-            Swal.fire({
-              title: 'สำเร็จ!',
-              text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-              icon: 'success',
-              confirmButtonText: 'ปิด',
-            }).then(() => {
-              sendFlexMessage();
-              console.log(data);
-            });
+          .then(function (videoStream) {
+            stream = videoStream;
+            video.srcObject = videoStream;
+            captureBtn.disabled = false;
+            switchCameraBtn.disabled = false;
+            video.style.display = "block";
+            previewImage.style.display = "none";
           })
-          .catch(error => {
-            Swal.close();
-            Swal.fire({
-              title: 'Error!',
-              text: 'Form submission failed. Please try again.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-            }).then(() => {
-              document.getElementById('submitButton').disabled = false;
-            });
-            console.error(error);
+          .catch(function (error) {
+            console.error("Error accessing the camera: ", error);
+            alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต.");
           });
       }
-    });
-  }
 
-  // ส่ง Flex Message ผ่าน LIFF
-  async function sendFlexMessage() {
-    let jobColor = '';
-    if (jobInput.value === 'เข้างาน') {
-      jobColor = '#0D9608FF';
-    } else if (jobInput.value === 'ออกงาน') {
-      jobColor = '#EF2F14FF';
-    } else {
-      jobColor = '#000000FF';
-    }
-    const flexMessage = {
-      type: 'flex',
-      altText: 'จดบันทึกเวลางาน',
-      contents: {
-        type: 'bubble',
-        direction: 'ltr',
-        body: {
-          type: 'box',
-          layout: 'vertical',
-          spacing: 'md',
-          contents: [
-            {
-              type: 'box',
-              layout: 'horizontal',
-              contents: [
-                {
-                  type: 'text',
-                  text: 'บันทึกเวลางาน',
-                  weight: 'bold',
-                  size: 'md',
-                  align: 'start',
-                  margin: 'sm',
-                  contents: []
-                },
-                {
-                  type: 'text',
-                  text: `${jobInput.value}`,
-                  weight: 'bold',
-                  size: 'md',
-                  color: jobColor,
-                  align: 'end',
-                  contents: []
-                }
-              ]
-            },
-            {
-              type: 'separator'
-            },
-            {
-              type: 'box',
-              layout: 'vertical',
-              spacing: 'sm',
-              contents: [
-                {
-                  type: 'box',
-                  layout: 'baseline',
-                  contents: [
-                    {
-                      type: 'text',
-                      text: 'ชื่อพนักงาน',
-                      weight: 'bold',
-                      size: 'sm',
-                      margin: 'sm',
-                      contents: []
-                    },
-                    {
-                      type: 'text',
-                      text: `${columnBData.value}`,
-                      size: 'sm',
-                      color: '#000000FF',
-                      align: 'end',
-                      contents: []
-                    }
-                  ]
-                },
-                {
-                  type: 'box',
-                  layout: 'baseline',
-                  contents: [
-                    {
-                      type: 'text',
-                      text: 'รหัสพนักงาน',
-                      weight: 'bold',
-                      size: 'sm',
-                      flex: 0,
-                      margin: 'sm',
-                      contents: []
-                    },
-                    {
-                      type: 'text',
-                      text: `${columnCData.value}`,
-                      size: 'sm',
-                      color: '#000000FF',
-                      align: 'end',
-                      contents: []
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'separator'
-            },
-            {
-              type: 'box',
-              layout: 'vertical',
-              contents: [
-                {
-                  type: 'box',
-                  layout: 'baseline',
-                  contents: [
-                    {
-                      type: 'text',
-                      text: 'วันที่',
-                      weight: 'bold',
-                      contents: []
-                    },
-                    {
-                      type: 'text',
-                      text: `${getFormattedDate()}`,
-                      weight: 'bold',
-                      align: 'end',
-                      contents: []
-                    }
-                  ]
-                },
-                {
-                  type: 'box',
-                  layout: 'baseline',
-                  contents: [
-                    {
-                      type: 'text',
-                      text: 'เวลา',
-                      weight: 'bold',
-                      contents: []
-                    },
-                    {
-                      type: 'text',
-                      text: `${currentTime.value}`,
-                      weight: 'bold',
-                      size: 'xl',
-                      color: '#EF2F14FF',
-                      align: 'end',
-                      contents: []
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'separator'
-            },
-            {
-              type: 'box',
-              layout: 'vertical',
-              spacing: 'xs',
-              margin: 'sm',
-              contents: [
-                {
-                  type: 'text',
-                  text: 'สถานที่',
-                  weight: 'bold',
-                  size: 'sm',
-                  margin: 'md',
-                  contents: []
-                },
-                {
-                  type: 'text',
-                  text: fullAddressInput.value ? `${fullAddressInput.value}` : 'ข้อมูลไม่พร้อมแสดง แต่เราเก็บพิกัดของคุณเรียบร้อย',
-                  wrap: true,
-                  contents: []
-                }
-              ]
-            }
-          ]
-        }
+      // ฟังก์ชันถ่ายรูป
+      function capturePhoto() {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        previewImage.src = canvas.toDataURL("image/png");
+        previewImage.style.display = "block";
+        video.style.display = "none";
       }
-    };
 
-    await liff.sendMessages([flexMessage]);
-    liff.closeWindow();
-  }
-
-  // อัพเดตวันที่และเวลาในหน้าเว็บ
-  function updateDateTime() {
-    const dateElement = document.getElementById('date');
-    const timeElement = document.getElementById('time');
-    const now = new Date();
-
-    const dateOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-
-    const timeOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: false,
-      timeZone: 'Asia/Bangkok'
-    };
-
-    const formattedDate = now.toLocaleDateString('th-TH', dateOptions);
-    const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
-    dateElement.textContent = formattedDate;
-    timeElement.textContent = formattedTime;
-  }
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
-
-  // เปลี่ยนค่าของงานเมื่อเลือกประเภทงาน
-  document.querySelectorAll('input[name="switch-job"]').forEach(function (radio) {
-    radio.addEventListener('change', function () {
-      document.getElementById('jobInput').value = this.value;
-      document.querySelectorAll('.switch-field label').forEach(function (label) {
-        label.classList.remove('bg-slate-800', 'text-white');
-      });
-      document.querySelector(`label[for="${this.id}"]`).classList.add('bg-slate-800', 'text-white');
-    });
-  });
-
-  // ดึงตำแหน่งที่ตั้งของผู้ใช้
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(displayLocation);
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  }
-
-  // แสดงตำแหน่งที่ตั้งในหน้าเว็บ
-  function displayLocation(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    document.getElementById("latitude").innerText = `Latitude: ${latitude}`;
-    document.getElementById("longitude").innerText = `Longitude: ${longitude}`;
-    document.getElementById("latitudeInput").value = latitude;
-    document.getElementById("longitudeInput").value = longitude;
-
-    const reverseGeocodingUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-    fetch(reverseGeocodingUrl)
-      .then(response => response.json())
-      .then(data => {
-        if (data.display_name) {
-          const fullAddress = data.display_name;
-          document.getElementById("fullAddress").innerText = `ที่อยู่ของคุณ: ${fullAddress}`;
-          document.getElementById("fullAddressInput").value = fullAddress;
-        } else {
-          document.getElementById("fullAddress").innerText = "Unable to retrieve full address.";
+      // ฟังก์ชันสลับกล้อง
+      function switchCamera() {
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
         }
-      })
-      .catch(error => {
-        console.error("Error fetching reverse geocoding data:", error);
-        document.getElementById("fullAddress").innerText = "Error fetching reverse geocoding data.";
+        currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+        startCamera();
+      }
+
+      startCameraBtn.addEventListener("click", startCamera);
+      captureBtn.addEventListener("click", capturePhoto);
+      switchCameraBtn.addEventListener("click", switchCamera);
+    });
+
+    // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนไปขั้นตอนถัดไป
+    function checkPictureAndNextStep() {
+      const capturedImage = document.getElementById('preview').src;
+      if (!capturedImage || capturedImage.includes('No-Image-Placeholder')) {
+        Swal.fire({
+          title: 'แจ้งเตือน!',
+          text: 'กรุณาถ่ายรูปก่อนที่จะไปยังขั้นตอนถัดไป',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+        });
+      } else {
+        nextStep();
+      }
+    }
+
+    // ส่งข้อมูลฟอร์ม
+    function submitForm() {
+      if (!columnBData.value || !columnCData.value || !jobInput.value || !latitudeInput.value || !longitudeInput.value) {
+        Swal.fire({
+          title: 'แจ้งเตือน!',
+          text: 'กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+        });
+        return;
+      }
+      Swal.fire({
+        title: 'ยืนยันการส่งข้อมูล',
+        text: 'คุณแน่ใจหรือไม่ที่ต้องการส่งข้อมูล?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+        customClass: {
+          confirmButton: 'px-10',
+          cancelButton: 'px-4'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('submitButton').disabled = true;
+          Swal.fire({
+            title: 'กำลังบันทึกข้อมูล',
+            text: 'กรุณารอสักครู่...',
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          let spt = preview.src.split("base64,")[1];
+          let obj = {
+            base64: spt,
+            name: columnBData.value,
+            role: columnCData.value,
+            job: jobInput.value,
+            note: noteInput.value,
+            today: todayInput.value,
+            time: currentTime.value,
+            lat: latitudeInput.value,
+            long: longitudeInput.value,
+            address: fullAddressInput.value,
+            user: userId.value
+          };
+          fetch(url, {
+            method: "POST",
+            body: JSON.stringify(obj),
+          })
+            .then(response => response.text())
+            .then(data => {
+              Swal.close();
+              Swal.fire({
+                title: 'สำเร็จ!',
+                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                icon: 'success',
+                confirmButtonText: 'ปิด',
+              }).then(() => {
+                sendFlexMessage();
+                console.log(data);
+              });
+            })
+            .catch(error => {
+              Swal.close();
+              Swal.fire({
+                title: 'Error!',
+                text: 'Form submission failed. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+              }).then(() => {
+                document.getElementById('submitButton').disabled = false;
+              });
+              console.error(error);
+            });
+        }
       });
-
-    const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}&output=embed`;
-    document.getElementById("mapIframe").src = mapsUrl;
-  }
-
-  // ดึงเวลาปัจจุบันในกรุงเทพ
-  function getCurrentTimeInBangkok() {
-    const now = new Date();
-    const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
-    const hours = String(bangkokTime.getHours()).padStart(2, '0');
-    const minutes = String(bangkokTime.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-  document.getElementById('currentTime').value = getCurrentTimeInBangkok();
-
-  // ฟังก์ชันสำหรับจัดรูปแบบวันที่
-  function getFormattedDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${day}/${month}/${year}`;
-  }
-  document.getElementById('todayInput').value = getFormattedDate();
-
-  // จัดการขั้นตอนการทำงาน
-  let currentStep = 1;
-  function nextStep() {
-    if (currentStep < 3) {
-      document.getElementById(`step${currentStep}`).style.display = 'none';
-      currentStep++;
-      document.getElementById(`step${currentStep}`).style.display = 'block';
     }
-  }
 
-  function prevStep() {
-    if (currentStep > 1) {
-      document.getElementById(`step${currentStep}`).style.display = 'none';
-      currentStep--;
-      document.getElementById(`step${currentStep}`).style.display = 'block';
+    // ส่ง Flex Message ผ่าน LIFF
+    async function sendFlexMessage() {
+      let jobColor = '';
+      if (jobInput.value === 'เข้างาน') {
+        jobColor = '#0D9608FF';
+      } else if (jobInput.value === 'ออกงาน') {
+        jobColor = '#EF2F14FF';
+      } else {
+        jobColor = '#000000FF';
+      }
+      const flexMessage = {
+        type: 'flex',
+        altText: 'จดบันทึกเวลางาน',
+        contents: {
+          type: 'bubble',
+          direction: 'ltr',
+          body: {
+            type: 'box',
+            layout: 'vertical',
+            spacing: 'md',
+            contents: [
+              {
+                type: 'box',
+                layout: 'horizontal',
+                contents: [
+                  {
+                    type: 'text',
+                    text: 'บันทึกเวลางาน',
+                    weight: 'bold',
+                    size: 'md',
+                    align: 'start',
+                    margin: 'sm',
+                    contents: []
+                  },
+                  {
+                    type: 'text',
+                    text: `${jobInput.value}`,
+                    weight: 'bold',
+                    size: 'md',
+                    color: jobColor,
+                    align: 'end',
+                    contents: []
+                  }
+                ]
+              },
+              {
+                type: 'separator'
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'sm',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'text',
+                        text: 'ชื่อพนักงาน',
+                        weight: 'bold',
+                        size: 'sm',
+                        margin: 'sm',
+                        contents: []
+                      },
+                      {
+                        type: 'text',
+                        text: `${columnBData.value}`,
+                        size: 'sm',
+                        color: '#000000FF',
+                        align: 'end',
+                        contents: []
+                      }
+                    ]
+                  },
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'text',
+                        text: 'รหัสพนักงาน',
+                        weight: 'bold',
+                        size: 'sm',
+                        flex: 0,
+                        margin: 'sm',
+                        contents: []
+                      },
+                      {
+                        type: 'text',
+                        text: `${columnCData.value}`,
+                        size: 'sm',
+                        color: '#000000FF',
+                        align: 'end',
+                        contents: []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'separator'
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'text',
+                        text: 'วันที่',
+                        weight: 'bold',
+                        contents: []
+                      },
+                      {
+                        type: 'text',
+                        text: `${getFormattedDate()}`,
+                        weight: 'bold',
+                        align: 'end',
+                        contents: []
+                      }
+                    ]
+                  },
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'text',
+                        text: 'เวลา',
+                        weight: 'bold',
+                        contents: []
+                      },
+                      {
+                        type: 'text',
+                        text: `${currentTime.value}`,
+                        weight: 'bold',
+                        size: 'xl',
+                        color: '#EF2F14FF',
+                        align: 'end',
+                        contents: []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'separator'
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'xs',
+                margin: 'sm',
+                contents: [
+                  {
+                    type: 'text',
+                    text: 'สถานที่',
+                    weight: 'bold',
+                    size: 'sm',
+                    margin: 'md',
+                    contents: []
+                  },
+                  {
+                    type: 'text',
+                    text: fullAddressInput.value ? `${fullAddressInput.value}` : 'ข้อมูลไม่พร้อมแสดง แต่เราเก็บพิกัดของคุณเรียบร้อย',
+                    wrap: true,
+                    contents: []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      };
+
+      await liff.sendMessages([flexMessage]);
+      liff.closeWindow();
     }
-  }
-</script>
+
+    // อัพเดตวันที่และเวลาในหน้าเว็บ
+    function updateDateTime() {
+      const dateElement = document.getElementById('date');
+      const timeElement = document.getElementById('time');
+      const now = new Date();
+
+      const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+
+      const timeOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: false,
+        timeZone: 'Asia/Bangkok'
+      };
+
+      const formattedDate = now.toLocaleDateString('th-TH', dateOptions);
+      const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
+      dateElement.textContent = formattedDate;
+      timeElement.textContent = formattedTime;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // เปลี่ยนค่าของงานเมื่อเลือกประเภทงาน
+    document.querySelectorAll('input[name="switch-job"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        document.getElementById('jobInput').value = this.value;
+        document.querySelectorAll('.switch-field label').forEach(function (label) {
+          label.classList.remove('bg-slate-800', 'text-white');
+        });
+        document.querySelector(`label[for="${this.id}"]`).classList.add('bg-slate-800', 'text-white');
+      });
+    });
+
+    // ดึงตำแหน่งที่ตั้งของผู้ใช้
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(displayLocation);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    // แสดงตำแหน่งที่ตั้งในหน้าเว็บ
+    function displayLocation(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      document.getElementById("latitude").innerText = `Latitude: ${latitude}`;
+      document.getElementById("longitude").innerText = `Longitude: ${longitude}`;
+      document.getElementById("latitudeInput").value = latitude;
+      document.getElementById("longitudeInput").value = longitude;
+
+      const reverseGeocodingUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+      fetch(reverseGeocodingUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.display_name) {
+            const fullAddress = data.display_name;
+            document.getElementById("fullAddress").innerText = `ที่อยู่ของคุณ: ${fullAddress}`;
+            document.getElementById("fullAddressInput").value = fullAddress;
+          } else {
+            document.getElementById("fullAddress").innerText = "Unable to retrieve full address.";
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching reverse geocoding data:", error);
+          document.getElementById("fullAddress").innerText = "Error fetching reverse geocoding data.";
+        });
+
+      const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}&output=embed`;
+      document.getElementById("mapIframe").src = mapsUrl;
+    }
+
+    // ดึงเวลาปัจจุบันในกรุงเทพ
+    function getCurrentTimeInBangkok() {
+      const now = new Date();
+      const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+      const hours = String(bangkokTime.getHours()).padStart(2, '0');
+      const minutes = String(bangkokTime.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+    document.getElementById('currentTime').value = getCurrentTimeInBangkok();
+
+    // ฟังก์ชันสำหรับจัดรูปแบบวันที่
+    function getFormattedDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${day}/${month}/${year}`;
+    }
+    document.getElementById('todayInput').value = getFormattedDate();
+
+    // จัดการขั้นตอนการทำงาน
+    let currentStep = 1;
+    function nextStep() {
+      if (currentStep < 3) {
+        document.getElementById(`step${currentStep}`).style.display = 'none';
+        currentStep++;
+        document.getElementById(`step${currentStep}`).style.display = 'block';
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        document.getElementById(`step${currentStep}`).style.display = 'none';
+        currentStep--;
+        document.getElementById(`step${currentStep}`).style.display = 'block';
+      }
+    }
+  </script>
+</body>
 
 </html>
