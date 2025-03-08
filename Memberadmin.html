@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แก้ไขโปรไฟล์</title>
-  <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- นำเข้า jQuery สำหรับการทำงานร่วมกับ DOM -->
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
+  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body class="bg-gray-100 p-6">
   <div class="max-w-4xl mx-auto">
-    <!-- ส่วนของฟอร์มกรองข้อมูล -->
+    <!-- ส่วน Filter -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4">
       <div>
         <label for="filter-name" class="block text-sm font-medium text-gray-700">ค้นหาตามชื่อ</label>
-        <input type="text" id="filter-name" placeholder="พิมพ์ชื่อพนักงาน"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+        <input type="text" id="filter-name" placeholder="พิมพ์ชื่อพนักงาน" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
       </div>
       <div>
         <label for="filter-department" class="block text-sm font-medium text-gray-700">ค้นหาตามแผนก</label>
-        <input type="text" id="filter-department" placeholder="พิมพ์ชื่อแผนก"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+        <input type="text" id="filter-department" placeholder="พิมพ์ชื่อแผนก" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
       </div>
       <div>
         <label for="filter-employeeID" class="block text-sm font-medium text-gray-700">ค้นหาตามรหัสพนักงาน</label>
-        <input type="text" id="filter-employeeID" placeholder="พิมพ์รหัสพนักงาน"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+        <input type="text" id="filter-employeeID" placeholder="พิมพ์รหัสพนักงาน" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+      </div>
+      <div>
+        <label for="filter-employeeID" class="block text-sm font-medium text-gray-700">รีเซต</label>
+        <button id="reset-leaves" class="bg-yellow-200 mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 px-4">วันลา</button>
+      </div>
+      <div>
+        <label for="filter-employeeID" class="block text-sm font-medium text-gray-700">รีเซต</label>
+        <button id="reset-ot" class="bg-blue-200 mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 px-4">โอที</button>
       </div>
     </div>
 
-    <!-- ตารางแสดงข้อมูลที่ดึงจาก Google Sheets -->
+    <!-- ปุ่มรีเซต (แยกเป็น 2 ปุ่ม) -->
+    <div class="mb-4 flex justify-end space-x-2">
+    </div>
+
+    <!-- ตารางแสดงข้อมูล -->
     <table id="data-table" class="min-w-full text-sm bg-white rounded shadow">
       <thead>
         <tr class="text-slate-800 text-md">
           <th class="py-2 px-4 border-b w-12">ID</th>
           <th class="py-2 px-4 text-left border-b">พนักงาน</th>
           <th class="py-2 px-4 text-left border-b w-32">แผนก</th>
-          <th class="py-2 px-4 text-center border-b w-48">Action</th>
+          <th class="py-2 px-4 text-center border-b w-48">คำสั่ง</th>
         </tr>
       </thead>
       <tbody class="text-sm">
-        <!-- ข้อมูลจะถูกเพิ่มที่นี่โดย JavaScript -->
+        <!-- ข้อมูลจะถูกเพิ่มโดย JavaScript -->
       </tbody>
     </table>
 
-    <!-- ส่วน pagination -->
-    <div id="pagination" class="mt-4 flex justify-center space-x-2">
-      <!-- ปุ่มเปลี่ยนหน้า Pagination จะถูกเพิ่มที่นี่ -->
-    </div>
+    <!-- ส่วน Pagination -->
+    <div id="pagination" class="mt-4 flex justify-center space-x-2"></div>
   </div>
 
   <!-- โมดอลสำหรับแก้ไขข้อมูล -->
@@ -60,114 +65,72 @@
     <div class="bg-white p-6 rounded-lg w-2/3 max-w-4xl">
       <h2 class="text-2xl mb-6">แก้ไขข้อมูลพนักงาน</h2>
       <form id="edit-form">
-        <!-- ฟิลด์ซ่อนสำหรับเก็บ ID -->
-        <input type="hidden" id="edit-id" />
-
-        <!-- กริดสองคอลัมน์ -->
-        <div class="grid grid-cols-2 gap-6">
-          <!-- UserID -->
+        <input type="hidden" id="edit-id">
+        <div class="grid grid-cols-3 gap-6">
           <div>
             <label for="edit-userID" class="block text-sm font-medium text-gray-700">UserID</label>
-            <input type="text" id="edit-userID"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" disabled />
+            <input type="text" id="edit-userID" class="mt-1 block w-full border border-gray-300 rounded-md p-2" disabled>
           </div>
-
           <div>
             <label for="edit-name" class="block text-sm font-medium text-gray-700">ชื่อพนักงาน</label>
-            <input type="text" id="edit-name"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="text" id="edit-name" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
             <label for="edit-employeeID" class="block text-sm font-medium text-gray-700">รหัสพนักงาน</label>
-            <input type="text" id="edit-employeeID"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="text" id="edit-employeeID" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
             <label for="edit-department" class="block text-sm font-medium text-gray-700">แผนก</label>
-            <input type="text" id="edit-department"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="text" id="edit-department" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
             <label for="edit-vacationLeave" class="block text-sm font-medium text-gray-700">ลาพักร้อน</label>
-            <input type="number" id="edit-vacationLeave"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="number" id="edit-vacationLeave" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
             <label for="edit-personalLeave" class="block text-sm font-medium text-gray-700">ลากิจ</label>
-            <input type="number" id="edit-personalLeave"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="number" id="edit-personalLeave" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
             <label for="edit-sickLeave" class="block text-sm font-medium text-gray-700">ลาป่วย</label>
-            <input type="number" id="edit-sickLeave"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="number" id="edit-sickLeave" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div>
-            <label for="edit-ot" class="block text-sm font-medium text-gray-700">OT</label>
-            <input type="number" id="edit-ot"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <label for="edit-ot" class="block text-sm font-medium text-gray-700">โอที</label>
+            <input type="number" id="edit-ot" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
-          <!-- ฟิลด์ใหม่สำหรับ กำหนดเข้างาน -->
           <div>
             <label for="edit-workStart" class="block text-sm font-medium text-gray-700">กำหนดเข้างาน</label>
-            <input type="time" id="edit-workStart"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="time" id="edit-workStart" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
-          <!-- ฟิลด์ใหม่สำหรับ กำหนดออกงาน -->
           <div>
             <label for="edit-workEnd" class="block text-sm font-medium text-gray-700">กำหนดออกงาน</label>
-            <input type="time" id="edit-workEnd"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="time" id="edit-workEnd" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
           <div class="col-span-2">
             <label for="edit-imageUrl" class="block text-sm font-medium text-gray-700">URL รูปภาพ</label>
-            <input type="text" id="edit-imageUrl"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="text" id="edit-imageUrl" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
-
-          <div class="col-span-2">
+          <div class="col-span-3">
             <label for="edit-image" class="block text-sm font-medium text-gray-700">อัปโหลดรูปภาพ</label>
-            <input type="file" id="edit-image"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+            <input type="file" id="edit-image" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
           </div>
         </div>
-
         <div class="flex justify-end mt-6">
-          <!-- ปุ่มยกเลิกการแก้ไข -->
-          <button type="button" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 mr-3"
-            onclick="closeEditModal()">
-            ยกเลิก
-          </button>
-          <!-- ปุ่มบันทึกการแก้ไข -->
-          <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-            บันทึก
-          </button>
+          <button type="button" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 mr-3" onclick="closeEditModal()">ยกเลิก</button>
+          <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">บันทึก</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // URL ของ Web App ที่ใช้สำหรับดึงข้อมูลจาก Google Sheets
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec";
-
-    const rowsPerPage = 10; // จำนวนแถวต่อหน้า
-    let currentPage = 1; // หน้าปัจจุบัน
-    let tableData = []; // ข้อมูลทั้งหมด (ดิบ)
-    let filteredData = []; // ข้อมูลที่ผ่านการกรองแล้ว
-
-    // เก็บ mapping ของ "ชื่อแผนก" -> "คลาสสี"
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    let tableData = [];
+    let filteredData = [];
     const departmentColors = {};
-    // ชุดสีพื้นหลังสำหรับ Badge (ปรับ/เพิ่ม/ลดได้ตามต้องการ)
     const badgeColors = [
       "bg-red-100 text-red-800",
       "bg-green-100 text-green-800",
@@ -178,95 +141,53 @@
       "bg-indigo-100 text-indigo-800",
       "bg-teal-100 text-teal-800",
     ];
-
-    // ฟังก์ชันสุ่มเลือกสีจาก badgeColors
     function getRandomColorClass() {
       return badgeColors[Math.floor(Math.random() * badgeColors.length)];
     }
-
-    // ฟังก์ชันดึงข้อมูลจาก Google Sheets
+    
     async function fetchData() {
       const response = await fetch(WEB_APP_URL);
       const data = await response.json();
-
-      // data[0] โดยมากเป็น header ใน Google Sheets
-      // เราจะ slice(1) เพื่อเอาเฉพาะข้อมูลจริง
       tableData = data.slice(1);
-
-      // เริ่มต้นให้ filteredData เท่ากับ tableData (ยังไม่กรอง)
       filteredData = tableData.slice();
-
       displayPage(currentPage);
       setupPagination();
     }
-
-    // ฟังก์ชันแสดงข้อมูลตามหน้าที่เลือก
+    
     function displayPage(page) {
       const startIndex = (page - 1) * rowsPerPage;
       const endIndex = startIndex + rowsPerPage;
       const paginatedData = filteredData.slice(startIndex, endIndex);
-
       const tableBody = document.querySelector("#data-table tbody");
-      tableBody.innerHTML = ""; // ลบข้อมูลที่มีอยู่ก่อน
-
+      tableBody.innerHTML = "";
       paginatedData.forEach((row) => {
-        // โครงสร้าง row:
-        // row[0] = ไอดี
-        // row[1] = userIDline
-        // row[2] = ชื่อ สกุล
-        // row[3] = รหัสประจำตัว
-        // row[4] = แผนก
-        // row[5] = รูปโปรไฟล์
-        // row[6] = บันทึกเวลาล่าสุด
-        // row[7] = ลาพักร้อน
-        // row[8] = ลากิจ
-        // row[9] = ลาป่วย
-        // row[10] = OT
-        // row[11] = กำหนดเข้างาน
-        // row[12] = กำหนดออกงาน
-
-        if (row.every((cell) => cell === "")) return; // ข้ามแถวที่ว่างเปล่า
-
+        if (row.every(cell => cell === "")) return;
         const tr = document.createElement("tr");
-
-        // 1) คอลัมน์ ID
         const idTd = document.createElement("td");
         idTd.textContent = row[0];
         idTd.className = "py-2 px-4 border-b";
         tr.appendChild(idTd);
-
-        // 2) คอลัมน์ พนักงาน (รูปภาพ + ชื่อ + รหัสพนักงาน + การลา)
         const employeeTd = document.createElement("td");
         employeeTd.className = "py-2 px-4 border-b";
-
         const wrapperDiv = document.createElement("div");
         wrapperDiv.className = "flex items-start space-x-3";
-
-        // รูปภาพ
         const imgDiv = document.createElement("div");
         if (row[5]) {
           const img = document.createElement("img");
           img.src = row[5];
           img.alt = "Profile";
-          img.className = "h-12 w-12 object-cover rounded-full";
+          img.className = "h-16 w-16 object-cover rounded-lg";
           imgDiv.appendChild(img);
         }
         wrapperDiv.appendChild(imgDiv);
-
-        // ข้อมูลพนักงาน (ชื่อ, รหัส, การลา)
         const infoDiv = document.createElement("div");
-
-        // ชื่อ + รหัสพนักงาน
         const nameEl = document.createElement("div");
         nameEl.innerHTML = `<span class="font-semibold">${row[2] || "ไม่ระบุชื่อ"}</span>`;
         infoDiv.appendChild(nameEl);
-
         const empIdEl = document.createElement("div");
         empIdEl.className = "text-sm text-gray-600";
         empIdEl.textContent = row[3] ? `รหัส: ${row[3]}` : "รหัส: -";
         infoDiv.appendChild(empIdEl);
-
-        // บรรทัดล่าง (ลาพักร้อน ลากิจ ลาป่วย OT) ตัวเล็กลง และสีเทาจาง
         const leaveEl = document.createElement("div");
         leaveEl.className = "text-xs text-gray-500 mt-1";
         const vacation = row[7] || 0;
@@ -275,12 +196,9 @@
         const ot = row[10] || 0;
         leaveEl.textContent = `ลาพักร้อน: ${vacation}   ลากิจ: ${personal}   ลาป่วย: ${sick}   OT: ${ot}`;
         infoDiv.appendChild(leaveEl);
-
         wrapperDiv.appendChild(infoDiv);
         employeeTd.appendChild(wrapperDiv);
         tr.appendChild(employeeTd);
-
-        // 3) คอลัมน์ แผนก (สุ่ม Badge สี)
         const departmentTd = document.createElement("td");
         departmentTd.className = "py-2 px-4 border-b";
         const dept = row[4] || "ไม่ระบุ";
@@ -292,41 +210,28 @@
         badgeSpan.className = "inline-block px-2 py-1 text-sm rounded " + departmentColors[dept];
         departmentTd.appendChild(badgeSpan);
         tr.appendChild(departmentTd);
-
-        // 4) คอลัมน์ Action (Edit, Delete)
         const actionTd = document.createElement("td");
         actionTd.className = "py-6 px-4 border-b flex space-x-2 justify-center";
-
-        // ปุ่ม Edit
         const editButton = document.createElement("button");
-        editButton.textContent = "Edit";
+        editButton.textContent = "แก้ไข";
         editButton.className = "bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700";
         editButton.onclick = () => openEditModal(row);
-
-        // ปุ่ม Delete
         const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
+        deleteButton.textContent = "ลบข้อมูล";
         deleteButton.className = "bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700";
         deleteButton.onclick = () => confirmDelete(row[0]);
-
         actionTd.appendChild(editButton);
         actionTd.appendChild(deleteButton);
         tr.appendChild(actionTd);
-
-        // เพิ่มแถวใน tbody
         tableBody.appendChild(tr);
       });
     }
-
-    // ฟังก์ชันสร้างปุ่ม pagination
+    
     function setupPagination() {
       const pageCount = Math.ceil(filteredData.length / rowsPerPage);
       const pagination = document.getElementById("pagination");
       pagination.innerHTML = "";
-
-      // ถ้าข้อมูลไม่มีเลย ก็ไม่ต้องสร้างปุ่ม
       if (pageCount === 0) return;
-
       for (let i = 1; i <= pageCount; i++) {
         const pageButton = document.createElement("button");
         pageButton.textContent = i;
@@ -339,22 +244,19 @@
         pagination.appendChild(pageButton);
       }
     }
-
-    // ฟังก์ชันอัปเดตสีของปุ่ม pagination ตามหน้าที่เลือก
+    
     function updatePaginationButtons() {
       const pagination = document.getElementById("pagination");
       const buttons = pagination.querySelectorAll("button");
-
       buttons.forEach((button, index) => {
         if (index + 1 === currentPage) {
           button.className = "py-2 px-4 rounded-2xl bg-slate-500 text-white";
         } else {
-          button.className = "py-2 px-4 rounded-2xl bg-slate-300 text-slate-800";
+          button.className = "py-2 px-4 rounded-2xl bg-gray-300 text-slate-800";
         }
       });
     }
-
-    // ฟังก์ชันเปิดโมดอลสำหรับแก้ไขข้อมูล
+    
     function openEditModal(row) {
       document.getElementById("edit-id").value = row[0];
       document.getElementById("edit-userID").value = row[1] || "";
@@ -366,53 +268,71 @@
       document.getElementById("edit-personalLeave").value = row[8] || "";
       document.getElementById("edit-sickLeave").value = row[9] || "";
       document.getElementById("edit-ot").value = row[10] || "";
-      // ฟิลด์ใหม่สำหรับกำหนดเข้างานและกำหนดออกงาน
       document.getElementById("edit-workStart").value = row[11] || "";
       document.getElementById("edit-workEnd").value = row[12] || "";
-
-      document.getElementById("edit-image").value = ""; // รีเซ็ตไฟล์อัปโหลด
+      document.getElementById("edit-image").value = "";
       document.getElementById("edit-modal").classList.remove("hidden");
     }
-
-    // ปิดโมดอล Edit
+    
     function closeEditModal() {
       document.getElementById("edit-modal").classList.add("hidden");
     }
-
-    // ฟังก์ชันอัปเดตข้อมูลใน Google Sheets
-    async function updateData(
-      id,
-      userID,
-      name,
-      employeeID,
-      department,
-      base64Image,
-      vacationLeave,
-      personalLeave,
-      sickLeave,
-      ot,
-      workStart,
-      workEnd
-    ) {
+    
+    // ฟังก์ชัน updateData สำหรับส่งข้อมูลแก้ไขไปยัง Google Apps Script
+    async function updateData(id, userID, name, employeeID, department, base64Image, vacationLeave, personalLeave, sickLeave, ot, workStart, workEnd) {
       const response = await fetch(WEB_APP_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}&vacationLeave=${encodeURIComponent(vacationLeave)}&personalLeave=${encodeURIComponent(personalLeave)}&sickLeave=${encodeURIComponent(sickLeave)}&ot=${encodeURIComponent(ot)}&workStart=${encodeURIComponent(workStart)}&workEnd=${encodeURIComponent(workEnd)}`,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}&vacationLeave=${encodeURIComponent(vacationLeave)}&personalLeave=${encodeURIComponent(personalLeave)}&sickLeave=${encodeURIComponent(sickLeave)}&ot=${encodeURIComponent(ot)}&workStart=${encodeURIComponent(workStart)}&workEnd=${encodeURIComponent(workEnd)}`
       });
       const result = await response.text();
       Swal.fire({
         title: "สำเร็จ",
         text: result,
         icon: "success",
-        confirmButtonText: "ตกลง",
+        confirmButtonText: "ตกลง"
       });
-      await fetchData(); // ดึงข้อมูลใหม่หลังจากอัปเดต
+      await fetchData();
     }
+    
+    document.getElementById("edit-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const id = document.getElementById("edit-id").value;
+      const userID = document.getElementById("edit-userID").value;
+      const name = document.getElementById("edit-name").value;
+      const employeeID = document.getElementById("edit-employeeID").value;
+      const department = document.getElementById("edit-department").value;
+      const vacationLeave = document.getElementById("edit-vacationLeave").value;
+      const personalLeave = document.getElementById("edit-personalLeave").value;
+      const sickLeave = document.getElementById("edit-sickLeave").value;
+      const ot = document.getElementById("edit-ot").value;
+      const workStart = document.getElementById("edit-workStart").value;
+      const workEnd = document.getElementById("edit-workEnd").value;
+      const imageFile = document.getElementById("edit-image").files[0];
+      let imageUrl = document.getElementById("edit-imageUrl").value;
+      
+      if (imageFile) {
+        try {
+          const base64Image = await getBase64(imageFile);
+          await updateData(id, userID, name, employeeID, department, base64Image, vacationLeave, personalLeave, sickLeave, ot, workStart, workEnd);
+        } catch (error) {
+          console.error("Error converting image to Base64:", error);
+          Swal.fire({
+            title: "เกิดข้อผิดพลาด",
+            text: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง",
+            icon: "error",
+            confirmButtonText: "ตกลง"
+          });
+        }
+      } else {
+        await updateData(id, userID, name, employeeID, department, imageUrl, vacationLeave, personalLeave, sickLeave, ot, workStart, workEnd);
+      }
+      closeEditModal();
+    });
 
-    // ฟังก์ชันลบข้อมูลใน Google Sheets
-    async function deleteData(id) {
+
+      // ฟังก์ชันลบข้อมูลใน Google Sheets
+      async function deleteData(id) {
       const response = await fetch(WEB_APP_URL, {
         method: "POST",
         headers: {
@@ -446,8 +366,7 @@
         }
       });
     }
-
-    // ฟังก์ชันแปลงไฟล์เป็น Base64
+    
     function getBase64(file) {
       return new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -456,113 +375,112 @@
         reader.readAsDataURL(file);
       });
     }
-
-    // ฟังก์ชันบันทึกการแก้ไขข้อมูล (เมื่อกด Submit ในฟอร์ม edit-form)
-    document.getElementById("edit-form").addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const id = document.getElementById("edit-id").value;
-      const userID = document.getElementById("edit-userID").value;
-      const name = document.getElementById("edit-name").value;
-      const employeeID = document.getElementById("edit-employeeID").value;
-      const department = document.getElementById("edit-department").value;
-      const vacationLeave = document.getElementById("edit-vacationLeave").value;
-      const personalLeave = document.getElementById("edit-personalLeave").value;
-      const sickLeave = document.getElementById("edit-sickLeave").value;
-      const ot = document.getElementById("edit-ot").value;
-      const workStart = document.getElementById("edit-workStart").value;
-      const workEnd = document.getElementById("edit-workEnd").value;
-      const imageFile = document.getElementById("edit-image").files[0];
-
-      let imageUrl = document.getElementById("edit-imageUrl").value;
-
-      // หากมีการอัปโหลดไฟล์รูปใหม่ ให้แปลงเป็น base64 แล้วส่งไป update
-      if (imageFile) {
-        try {
-          const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-          await updateData(
-            id,
-            userID,
-            name,
-            employeeID,
-            department,
-            base64Image,
-            vacationLeave,
-            personalLeave,
-            sickLeave,
-            ot,
-            workStart,
-            workEnd
-          );
-        } catch (error) {
-          console.error("Error converting image to Base64:", error);
-          Swal.fire({
-            title: "เกิดข้อผิดพลาด",
-            text: "การอัปโหลดรูปภาพล้มเหลว กรุณาลองใหม่อีกครั้ง",
-            icon: "error",
-            confirmButtonText: "ตกลง",
-          });
+    
+    async function resetLeaves() {
+      Swal.fire({
+        title: "คุณแน่ใจหรือไม่?",
+        text: "คุณต้องการรีเซตวันลา (ลาพักร้อน, ลากิจ, ลาป่วย) สำหรับพนักงานทั้งหมด?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ใช่, รีเซตเลย!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch(WEB_APP_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "method=resetLeaves"
+            });
+            const resultText = await response.text();
+            Swal.fire({
+              title: "สำเร็จ",
+              text: resultText,
+              icon: "success",
+              confirmButtonText: "ตกลง"
+            });
+            fetchData();
+          } catch (error) {
+            console.error("Error resetting leaves:", error);
+            Swal.fire({
+              title: "เกิดข้อผิดพลาด",
+              text: "ไม่สามารถรีเซตวันลาได้ในขณะนี้",
+              icon: "error",
+              confirmButtonText: "ตกลง"
+            });
+          }
         }
-      } else {
-        // ใช้ URL เดิม (หรือว่าง) ไปอัปเดต
-        await updateData(
-          id,
-          userID,
-          name,
-          employeeID,
-          department,
-          imageUrl,
-          vacationLeave,
-          personalLeave,
-          sickLeave,
-          ot,
-          workStart,
-          workEnd
-        );
-      }
-
-      closeEditModal();
-    });
-
-    // เมื่อโหลดหน้าเว็บให้ดึงข้อมูล
-    window.onload = fetchData;
-
-    // -- ส่วนกรองข้อมูล (ชื่อ, แผนก, รหัส) --
+      });
+    }
+    
+    async function resetOT() {
+      Swal.fire({
+        title: "คุณแน่ใจหรือไม่?",
+        text: "คุณต้องการรีเซต OT สำหรับพนักงานทั้งหมด?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ใช่, รีเซตเลย!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch(WEB_APP_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "method=resetOT"
+            });
+            const resultText = await response.text();
+            Swal.fire({
+              title: "สำเร็จ",
+              text: resultText,
+              icon: "success",
+              confirmButtonText: "ตกลง"
+            });
+            fetchData();
+          } catch (error) {
+            console.error("Error resetting OT:", error);
+            Swal.fire({
+              title: "เกิดข้อผิดพลาด",
+              text: "ไม่สามารถรีเซต OT ได้ในขณะนี้",
+              icon: "error",
+              confirmButtonText: "ตกลง"
+            });
+          }
+        }
+      });
+    }
+    
+    document.getElementById("reset-leaves").addEventListener("click", resetLeaves);
+    document.getElementById("reset-ot").addEventListener("click", resetOT);
+    
     const filterNameInput = document.getElementById("filter-name");
     const filterDeptInput = document.getElementById("filter-department");
     const filterEmpIDInput = document.getElementById("filter-employeeID");
-
-    // เมื่อมีการพิมพ์ในช่องกรองชื่อ
     filterNameInput.addEventListener("input", applyFilters);
-    // เมื่อมีการพิมพ์ในช่องกรองแผนก
     filterDeptInput.addEventListener("input", applyFilters);
-    // เมื่อมีการพิมพ์ในช่องกรองรหัสพนักงาน
     filterEmpIDInput.addEventListener("input", applyFilters);
-
     function applyFilters() {
       const nameValue = filterNameInput.value.toLowerCase();
       const deptValue = filterDeptInput.value.toLowerCase();
       const empIdValue = filterEmpIDInput.value.toLowerCase();
-
       filteredData = tableData.filter((row) => {
         const empName = row[2] ? row[2].toLowerCase() : "";
         const department = row[4] ? row[4].toLowerCase() : "";
         const employeeID = row[3] ? row[3].toLowerCase() : "";
-
-        // ต้องตรงกับทั้ง 3 เงื่อนไข (ชื่อ, แผนก, รหัสพนักงาน)
         return (
           empName.includes(nameValue) &&
           department.includes(deptValue) &&
           employeeID.includes(empIdValue)
         );
       });
-
-      // รีเซ็ตหน้าปัจจุบันเป็นหน้าแรก แล้วค่อยแสดง
       currentPage = 1;
       displayPage(currentPage);
       setupPagination();
     }
+    
+    window.onload = fetchData;
   </script>
 </body>
-
 </html>
