@@ -105,12 +105,8 @@
     </form>
   </div>
 
+  <script src="config.js"></script>
   <script>
-    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-    const WEB_MEMBER_APP_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
-    const WEB_APP_OT_URL = 'https://script.google.com/macros/s/AKfycbwVrPgsYUVE2EIur5p6QuRnx_Xk7mkkV1tkeowLsPKWvXmAnPMHaRPMgWX51BOlRuhosA/exec';
-    const LIFF_ID = '2006740306-pO7Gq31W'; // Liff ID
-
     // เริ่มการทำงานเมื่อโหลดหน้าเว็บ
     window.onload = async function () {
       await initializeLiff();
@@ -154,7 +150,7 @@
     // ฟังก์ชันสำหรับเริ่มการทำงานของ LIFF
     async function initializeLiff() {
       try {
-        await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ Liff ID ของคุณ
+        await liff.init({ liffId: `${LIFF_ID3}` }); // ใช้ Liff ID ของคุณ
         if (liff.isLoggedIn()) {
           getUserProfile();
         } else {
