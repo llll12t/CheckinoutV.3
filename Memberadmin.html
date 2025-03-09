@@ -123,9 +123,8 @@
       </form>
     </div>
   </div>
-
+  <script src="config.js"></script>
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec";
     const rowsPerPage = 10;
     let currentPage = 1;
     let tableData = [];
@@ -146,7 +145,7 @@
     }
     
     async function fetchData() {
-      const response = await fetch(WEB_APP_URL);
+      const response = await fetch(WEB_APP_MEMBER_URL);
       const data = await response.json();
       tableData = data.slice(1);
       filteredData = tableData.slice();
@@ -280,7 +279,7 @@
     
     // ฟังก์ชัน updateData สำหรับส่งข้อมูลแก้ไขไปยัง Google Apps Script
     async function updateData(id, userID, name, employeeID, department, base64Image, vacationLeave, personalLeave, sickLeave, ot, workStart, workEnd) {
-      const response = await fetch(WEB_APP_URL, {
+      const response = await fetch(WEB_APP_MEMBER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}&vacationLeave=${encodeURIComponent(vacationLeave)}&personalLeave=${encodeURIComponent(personalLeave)}&sickLeave=${encodeURIComponent(sickLeave)}&ot=${encodeURIComponent(ot)}&workStart=${encodeURIComponent(workStart)}&workEnd=${encodeURIComponent(workEnd)}`
@@ -333,7 +332,7 @@
 
       // ฟังก์ชันลบข้อมูลใน Google Sheets
       async function deleteData(id) {
-      const response = await fetch(WEB_APP_URL, {
+      const response = await fetch(WEB_APP_MEMBER_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -388,7 +387,7 @@
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await fetch(WEB_APP_URL, {
+            const response = await fetch(WEB_APP_MEMBER_URL, {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: "method=resetLeaves"
@@ -426,7 +425,7 @@
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await fetch(WEB_APP_URL, {
+            const response = await fetch(WEB_APP_MEMBER_URL, {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: "method=resetOT"
