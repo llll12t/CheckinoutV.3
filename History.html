@@ -63,12 +63,9 @@
       <div id="loading" class="text-center text-slate-800 mt-4 text-sm">กำลังโหลด...</div>
     </div>
   </div>
-
+  
+  <script src="config.js"></script>
   <script>
-    // URL ของ Web App ที่คุณ Deploy ไว้
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
-    const LIFF_ID = '2006740306-qLWyP3w6'; // LIFF ID
-
     // จำนวนรายการที่จะแสดงต่อหน้า
     const itemsPerPage = 10;
     let currentPage = 1;
@@ -80,7 +77,7 @@
 
     // ฟังก์ชันเริ่มต้น LIFF
     async function initializeLiff() {
-      await liff.init({ liffId: `${LIFF_ID}` });
+      await liff.init({ liffId: `${LIFF_ID1}` });
       if (liff.isLoggedIn()) {
         getUserProfile();
       } else {
