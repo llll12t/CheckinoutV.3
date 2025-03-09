@@ -62,13 +62,8 @@
         </form>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="/config.js"></script>
     <script>
-
-        // URL ของ Web App ที่ใช้ในการลงทะเบียน
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
-        // LIFF ID สำหรับการเชื่อมต่อกับ LINE
-        const LIFF_ID = '2006740306-qlr7J9go'; // LIFF ID
-
         // ฟังก์ชันเริ่มต้น LIFF SDK เมื่อโหลดหน้าเว็บ
         window.onload = function () {
             initializeLiff();
@@ -76,7 +71,7 @@
 
         // ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
         async function initializeLiff() {
-            await liff.init({ liffId: `${LIFF_ID}` });
+            await liff.init({ liffId: `${LIFF_ID3}` });
 
             if (liff.isLoggedIn()) {
                 getUserProfile(); // ถ้าเข้าสู่ระบบแล้วให้ดึงข้อมูลโปรไฟล์
@@ -237,7 +232,7 @@
         }
 
         // กำหนดตัวแปรสำหรับใช้ในฟังก์ชันต่างๆ
-        let url = `${WEB_APP_URL}`;
+        let url = `${WEB_APP_MEMBER_URL}`;
         let fileInput = document.getElementById("file");
         let imgPreview = document.getElementById("preview");
         let userlineIdInput = document.getElementById("userlineId");
