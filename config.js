@@ -6,7 +6,7 @@
 
 //LIFF_ID
     const LIFF_ID = '2006740306-qp2xNvgM'; // LIFF ID Checkin
-    const LIFF_ID1 = '2006740306-qp2xNvgM'; // LIFF ID history
+    const LIFF_ID1 = '2006740306-qLWyP3w6'; // LIFF ID history
     const LIFF_ID2 = '2006740306-r6ekvl6x'; // LIFF ID leave
     const LIFF_ID3 = '2006740306-pO7Gq31W'; // LIFF ID ot
     const LIFF_ID4 = '2006740306-qlr7J9go'; // LIFF ID register
