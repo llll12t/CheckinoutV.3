@@ -107,12 +107,9 @@
 
   <!-- นำเข้า flatpickr JS -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
-    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-    const WEB_MEMBER_APP_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
-    const WEB_APP_Leave_URL = 'https://script.google.com/macros/s/AKfycbwrOQM3tM7HDvjVCvpkl7heP9U4hH4kEDOIzGjF2g_l031mo4Mt83sMEzBociiOnil17Q/exec';
-    const LIFF_ID = '2006740306-r6ekvl6x';
+  <script src="config.js"></script>
 
+  <script>
     // เริ่มการทำงานเมื่อโหลดหน้าเว็บ
     window.onload = async function () {
       await initializeLiff();
@@ -129,7 +126,7 @@
     // ฟังก์ชันสำหรับเริ่มการทำงานของ LIFF
     async function initializeLiff() {
       try {
-        await liff.init({ liffId: LIFF_ID });
+        await liff.init({ liffId: LIFF_ID2 });
         if (liff.isLoggedIn()) {
           getUserProfile();
         } else {
@@ -157,7 +154,7 @@
     async function fetchData(userId) {
       showLoading(true);
       try {
-        const response = await fetch(WEB_MEMBER_APP_URL, {
+        const response = await fetch(WEB_APP_MEMBER_URL, {
           method: 'POST',
           body: JSON.stringify({ action: 'fetchData', userId: userId })
         });
