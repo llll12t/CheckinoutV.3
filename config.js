@@ -1,9 +1,9 @@
 // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbxKtQXKqAOxIOb8Pgh6Gg3h6-YHj8WnPTC0Lhl-Gq_aFSfWXoxfMRSo2vKFY7pa8yP6EQ/exec';
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
+    // const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLkcQkCQppkiiGRrGT6yN6O4KPbPaJAeOlgtv3u6yGh2aF0ubVNgIi4oDIyslajxUj/exec';
     const WEB_APP_Leave_URL = 'https://script.google.com/macros/s/AKfycbwrOQM3tM7HDvjVCvpkl7heP9U4hH4kEDOIzGjF2g_l031mo4Mt83sMEzBociiOnil17Q/exec';
-    // const WEB_APP_OT_URL = 'https://script.google.com/macros/s/AKfycbwVrPgsYUVE2EIur5p6QuRnx_Xk7mkkV1tkeowLsPKWvXmAnPMHaRPMgWX51BOlRuhosA/exec';
-    const WEB_APP_OT_URL = 'https://script.google.com/macros/s/AKfycbwd452UDh3cpc4Mc0uroNRqJCuIcRXyRJvB8i3MzQ-o-q8M6pKKSkvX22yUOEUDuKLcOw/exec';
+    const WEB_APP_OT_URL = 'https://script.google.com/macros/s/AKfycbwVrPgsYUVE2EIur5p6QuRnx_Xk7mkkV1tkeowLsPKWvXmAnPMHaRPMgWX51BOlRuhosA/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwd452UDh3cpc4Mc0uroNRqJCuIcRXyRJvB8i3MzQ-o-q8M6pKKSkvX22yUOEUDuKLcOw/exec';
 
 
 //LIFF_ID
